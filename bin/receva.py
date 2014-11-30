@@ -11,10 +11,11 @@ parser.add_argument("-c", "--categories", action="store_true",
                     help="show all categories")
 parser.add_argument("--show-category",
                     help="show all items in a category", metavar=('CATEGORY'))
-parser.add_argument("--show-null", action="store_true",
-                    help='Show items without category')
+parser.add_argument("-0","--show-null", action="store_true",
+                    help='Show items without a category')
 parser.add_argument("-s","--check-sanity", action="store_true",
-                    help='Check if an item belongs to two or more categories')
+                    help='Check if an item belongs to two or more categories\n'+
+                    'Does not count the "empty category"')
 
 args = parser.parse_args()
 
