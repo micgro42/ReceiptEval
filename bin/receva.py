@@ -41,7 +41,18 @@ elif args.check_sanity:
         print item
 else:
     for key in rc.categories:
-        print 'Category ' + key + ': ' + str(rc.categories[key][0])
+        if key == 'Category':
+            continue
+        if rc.categories[key][0] >= 100.00:
+            prespace = ''
+        elif rc.categories[key][0] >= 10.00:
+            prespace = ' '
+        elif rc.categories[key][0] >= 0.0:
+            prespace = '  '
+        else:
+            prespace = ' '
+
+        print "{0:6.2f}".format(rc.categories[key][0]) + ' ' + key
 
 
 
