@@ -36,7 +36,9 @@ elif args.show_category is not None:
     for item in rc.categories[args.show_category][1]:
         print item
 elif args.check_sanity:
-    print "Not implemented yet"
+    print "The following items are in more than one category:"
+    for item in rc.unsane_items:
+        print item
 else:
     for key in rc.categories:
         print 'Category ' + key + ': ' + str(rc.categories[key][0])
