@@ -15,15 +15,13 @@ class parser(object):
         '''
         Constructor
         '''
-        print 'parser init'
         self.receipt_lines = []
 
     def __enter__(self):
-        print 'parser enter'
         return self
 
     def __exit__(self, thetype, value, traceback):
-        print 'parser exit'
+        pass
         #return True # todo: is this line necessary? 
 
     def readFile(self, file_path):
