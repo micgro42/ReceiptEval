@@ -43,15 +43,6 @@ else:
     for key in rc.categories:
         if key == 'Category':
             continue
-        if rc.categories[key][0] >= 100.00:
-            prespace = ''
-        elif rc.categories[key][0] >= 10.00:
-            prespace = ' '
-        elif rc.categories[key][0] >= 0.0:
-            prespace = '  '
-        else:
-            prespace = ' '
-
         catTotal = rc.categories[key][0]
         print "{0:6.2f}".format(catTotal) + ' ' + "{0:4.1f}".format(catTotal/rc.total*100.0) + "% "  + key + " ({0:d})".format(len(rc.categories[key][1]))
 
