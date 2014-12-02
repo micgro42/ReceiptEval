@@ -33,9 +33,11 @@ class receiptCollection(object):
                 self.categories[category][1].add(item)
                 self.categories[category][0] += price
         self.checkSanity()
+        self.calcTotal()
 
     def checkSanity(self):
         all_items = set()
+        self.total = 0.0
         for c in self.categories:
             if c is '':
                 continue
@@ -43,3 +45,6 @@ class receiptCollection(object):
                 if item in all_items:
                     self.unsane_items.append(item)
                 all_items.add(item)
+    def calcTotal(self):
+        for c in self.categories:
+            self.total += self.categories[c][0]
