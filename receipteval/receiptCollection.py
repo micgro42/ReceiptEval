@@ -28,8 +28,12 @@ class receiptCollection(object):
                 try:
                     price = float(line[3])
                 except ValueError:
-                    print 'incorrect price "' + line[3] + '"'
-                    raise
+                    if (line[3] == ''):
+                        self.unsane_items.append(item)
+                        continue
+                    else:
+                        print 'incorrect price "' + line[3] + '"'
+                        raise
                 self.categories[category][1].add(item)
                 self.categories[category][0] += price
         self.checkSanity()

@@ -29,7 +29,8 @@ def factory_file(request):
                                ",,Safranfäden,6.29,Gewürze,,,,\n",
                                ",,Vanillepulver,2.49,Gewürze,,,,\n",
                                ",,Kakaopulver,2.19,,,,,\n",
-                               ',,"Basilikum, frisch",1.99,Gewürze,,,,\n'])
+                               ',,"Basilikum, frisch",1.99,Gewürze,,,,\n',
+                               ',,Item without Price,,Mehl,,,,\n'])
     request.addfinalizer(teardown_factory_file)
 
 def teardown_factory_file():
