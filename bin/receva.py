@@ -45,6 +45,7 @@ else:
             continue
         catTotal = rc.categories[key][0]
         print "{0:6.2f}".format(catTotal) + ' ' + "{0:4.1f}".format(catTotal/rc.total*100.0) + "% "  + key + " ({0:d})".format(len(rc.categories[key][1]))
+    print "{0:6.2f}".format(rc.total) + "       " + "Total";
 
 
 
