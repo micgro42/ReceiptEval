@@ -30,7 +30,8 @@ def factory_file(request):
                                ",,Vanillepulver,2.49,Gewürze,,,,\n",
                                ",,Kakaopulver,2.19,,,,,\n",
                                ',,"Basilikum, frisch",1.99,Gewürze,,,,\n',
-                               ',,Item without Price,,Mehl,,,,\n'])
+                               ',,Item without Price,,Mehl,,,,\n',
+                               ",2,Roggenmehl,3.98,Obst,,,,\n"])
     request.addfinalizer(teardown_factory_file)
 
 def teardown_factory_file():
@@ -66,7 +67,7 @@ def test_items_in_categories(factory_file):
                                                    'Basilikum, frisch'])
     assert sorted(rc.categories['Mehl'][1]) == sorted(['Roggenmehl'])
     assert sorted(rc.categories['Kochzutaten'][1]) == sorted(['Risotto'])
-    assert sorted(rc.categories['Obst'][1]) == sorted(['Bananen'])
+    assert sorted(rc.categories['Obst'][1]) == sorted(['Bananen','Roggenmehl'])
 
 def test_category_prices(factory_file):
     with parser() as p:
@@ -76,10 +77,15 @@ def test_category_prices(factory_file):
     assert round(rc.categories['Zubrot'][0],2) == 1.69
     assert round(rc.categories['Mehl'][0],2) == 3.98
     assert round(rc.categories['Kochzutaten'][0],2) == 4.38
-    assert round(rc.categories['Obst'][0],2) == 1.22
+    assert round(rc.categories['Obst'][0],2) == 5.20
     assert round(rc.categories['Gewürze'][0],2) == 10.77
     
-
+def test_unsane_items(factory_file):
+    with parser() as p:
+        rc = p.readFile('receipts_test.csv')
+    rc.collectItems()
+    assert sorted(rc.unsane_items) == sorted(['Item without Price',
+                                                   'Roggenmehl']) 
 
 
 
