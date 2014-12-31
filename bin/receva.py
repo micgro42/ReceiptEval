@@ -32,9 +32,12 @@ elif args.show_null:
     for item in rc.categories[''][1]:
         print item
 elif args.show_category is not None:
-    print 'Items in category ' + args.show_category + ':'
-    for item in rc.categories[args.show_category][1]:
-        print item
+    if args.show_category not in rc.categories:
+        print 'There is no category ' + args.show_category + '.'
+    else:
+        print 'Items in category ' + args.show_category + ':'
+        for item in rc.categories[args.show_category][1]:
+            print item
 elif args.check_sanity:
     print "The following items are in more than one category or their price is missing:"
     for item in rc.unsane_items:
