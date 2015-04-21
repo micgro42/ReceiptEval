@@ -1,7 +1,8 @@
+# -*- coding: utf-8 -*-
 '''
 Created on Nov 30, 2014
 
-@author: michael
+@author: Michael Große <mic.grosse@posteo.de>
 '''
 
 from item_cat_dict import ItemCategoryDict
@@ -54,15 +55,16 @@ class receiptCollection(object):
 
     def checkSanity(self):
         all_items = set()
-        self.total = 0.0
         for c in self.categories:
             if c is '':
                 continue
             for item in self.categories[c][1]:
-                if item in all_items:
+                if (item in all_items):
                     self.unsane_items.append(item)
                 self.checkCategory(c, item)
                 all_items.add(item)
+
     def calcTotal(self):
+        self.total = 0.0
         for c in self.categories:
             self.total += self.categories[c][0]

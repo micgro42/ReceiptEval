@@ -1,7 +1,8 @@
+# -*- coding: utf-8 -*-
 '''
 Created on Nov 30, 2014
 
-@author: michael
+@author: Michael Große <mic.grosse@posteo.de>
 '''
 import csv
 from receipteval.receiptCollection import receiptCollection
