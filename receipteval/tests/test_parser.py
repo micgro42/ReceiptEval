@@ -2,7 +2,7 @@
 '''
 Created on Nov 30, 2014
 
-@author: michael
+@author: Michael Große <mic.grosse@posteo.de>
 '''
 import pytest
 import os
