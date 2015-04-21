@@ -16,6 +16,8 @@ parser.add_argument("-0","--show-null", action="store_true",
 parser.add_argument("-s","--check-sanity", action="store_true",
                     help='Check if an item belongs to two or more categories\n'+
                     'Does not count the "empty category"')
+parser.add_argument("-S","--check-categories", action="store_true",
+                    help='Check Categories')
 
 args = parser.parse_args()
 
@@ -39,6 +41,9 @@ elif args.check_sanity:
     print "The following items are in more than one category or their price is missing:"
     for item in rc.unsane_items:
         print item
+elif args.check_categories:
+    for (item,inputCategory,storedCategory) in rc.unsane_categories:
+        print item + " " + inputCategory + " " + storedCategory
 else:
     for key in rc.categories:
         if key == 'Category':
