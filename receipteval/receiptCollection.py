@@ -4,6 +4,8 @@ Created on Nov 30, 2014
 @author: michael
 '''
 
+from item_cat_dict import ItemCategoryDict
+
 class receiptCollection(object):
     '''
     classdocs
@@ -17,6 +19,8 @@ class receiptCollection(object):
         self.categories = {}
         self.receipt_lines = []
         self.unsane_items = []
+        self.unsane_categories = []
+        self.categoryDict = ItemCategoryDict()
 
     def collectItems(self):
         for line in self.receipt_lines:
@@ -34,10 +38,19 @@ class receiptCollection(object):
                     else:
                         print 'incorrect price "' + line[3] + '"'
                         raise
+                storedCategory = self.categoryDict.getCategory(item)
+                if (category is '' and storedCategory is not ''):
+                    category = storedCategory
                 self.categories[category][1].add(item)
                 self.categories[category][0] += price
         self.checkSanity()
         self.calcTotal()
+
+
+    def checkCategory(self, c, item):
+        storedCategory = self.categoryDict.getCategory(item)
+        if (c != storedCategory):
+            self.unsane_categories.append((item, c, storedCategory))
 
     def checkSanity(self):
         all_items = set()
@@ -48,6 +61,7 @@ class receiptCollection(object):
             for item in self.categories[c][1]:
                 if item in all_items:
                     self.unsane_items.append(item)
+                self.checkCategory(c, item)
                 all_items.add(item)
     def calcTotal(self):
         for c in self.categories:
