@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*-
+import os
+import csv
+
 """
 provide class item_category_dict
 """
@@ -7,16 +10,16 @@ class ItemCategoryDict(object):
     Set the category for every item
 
     """
-    item_category_dict = {
-            'Pfand': 'Pfand',
-            'Pesto': 'Pesto',
-            'Parmesan': 'Käse',
-            'Heumilch': 'Milch',
-            'Milch': 'Milch',
-    }
 
     def __init__(self):
-        pass
+        file_path = 'KinEtCategories.csv'
+        if os.path.isfile(file_path):
+            self.item_category_dict = {}
+            with open(file_path, 'r') as receipt_file:
+                csv_reader = csv.reader(receipt_file)
+                self.item_category_dict = {rows[0].strip():rows[1].strip() for rows in csv_reader}
+        if os.path.isfile('categories.ini'):
+            pass
 
     def getCategory(self, item):
         """Return the category of an item
@@ -24,7 +27,4 @@ class ItemCategoryDict(object):
         :param item: name of item
         :type item: string
         """
-        if item in self.item_category_dict:
-            return self.item_category_dict[item]
-        else:
-            return ''
+        return self.item_category_dict.get(item,'')
