@@ -4,7 +4,7 @@ Created on Nov 30, 2014
 
 @author: Michael Große <mic.grosse@posteo.de>
 '''
-
+from collections import defaultdict
 from item_cat_dict import ItemCategoryDict
 
 class receiptCollection(object):
@@ -17,7 +17,7 @@ class receiptCollection(object):
         '''
         Constructor
         '''
-        self.categories = {}
+        self.categories = defaultdict(lambda : [0.0,set()])
         self.receipt_lines = []
         self.unsane_items = []
         self.unsane_categories = []
@@ -26,7 +26,7 @@ class receiptCollection(object):
     def collectItems(self):
         for line in self.receipt_lines:
             date = line[0]
-            item = line[2]
+            item = line[2].strip()
             category = line[4]
             if (date is '' and
                 item is not ''):
@@ -40,7 +40,7 @@ class receiptCollection(object):
                         print 'incorrect price "' + line[3] + '"'
                         raise
                 storedCategory = self.categoryDict.getCategory(item)
-                if (category is '' and storedCategory is not ''):
+                if (category == '' and storedCategory != ''):
                     category = storedCategory
                 self.categories[category][1].add(item)
                 self.categories[category][0] += price
