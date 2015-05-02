@@ -28,3 +28,11 @@ class ItemCategoryDict(object):
         :type item: string
         """
         return self.item_category_dict.get(item,'')
+
+    def extractNew(self, path):
+        """ Create new categories file from receipt collection
+ 
+        :param path: name of receipt collection file
+        :type path: string
+        """
+        pass
