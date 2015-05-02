@@ -11,16 +11,37 @@ from receipteval.receiptCollection import receiptCollection
 
 def test_category_correct():
     rC = receiptCollection()
+    rC.categoryDict.item_category_dict = {
+                                          'Pfand': 'Pfand',
+                                          'Pesto': 'Pesto',
+                                          'Parmesan': 'Käse',
+                                          'Heumilch': 'Milch',
+                                          'Milch': 'Milch',
+                                          }
     rC.checkCategory('Milch','Heumilch')
     assert not rC.unsane_categories
 
 def test_category_wrong():
     rC = receiptCollection()
+    rC.categoryDict.item_category_dict = {
+                                          'Pfand': 'Pfand',
+                                          'Pesto': 'Pesto',
+                                          'Parmesan': 'Käse',
+                                          'Heumilch': 'Milch',
+                                          'Milch': 'Milch',
+                                          }
     rC.checkCategory('Obst','Heumilch')
     assert rC.unsane_categories[0] == ('Heumilch', 'Obst', 'Milch')
     
 def test_category_missing():
     rC = receiptCollection()
+    rC.categoryDict.item_category_dict = {
+                                          'Pfand': 'Pfand',
+                                          'Pesto': 'Pesto',
+                                          'Parmesan': 'Käse',
+                                          'Heumilch': 'Milch',
+                                          'Milch': 'Milch',
+                                          }
     rC.checkCategory('','Heumilch')
     assert rC.unsane_categories[0] == ('Heumilch', '', 'Milch')
 
