@@ -7,7 +7,7 @@ Created on Nov 30, 2014
 import pytest
 import os
 from receipteval.parser import parser
-
+from receipteval.item_cat_dict import ItemCategoryDict
 
 #class ParserTest():
 
@@ -88,7 +88,12 @@ def test_unsane_items(factory_file):
                                                    'Roggenmehl']) 
 
 
-
+def test_category_create(factory_file):
+    category_dict = ItemCategoryDict();
+    category_dict.extractNew('receipts_test.csv')
+    assert '' not in category_dict.item_category_dict
+    assert 'Bio Company' not in category_dict.item_category_dict
+    assert category_dict.item_category_dict['Blanc de Pomm'] == 'Zubrot';
 
 
 
