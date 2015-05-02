@@ -29,10 +29,19 @@ class ItemCategoryDict(object):
         """
         return self.item_category_dict.get(item,'')
 
-    def extractNew(self, path):
+    def extractNew(self, file_path):
         """ Create new categories file from receipt collection
  
-        :param path: name of receipt collection file
-        :type path: string
+        :param file_path: name of receipt collection file
+        :type file_path: string
         """
-        pass
+        if os.path.isfile(file_path):
+            with open(file_path, 'r') as receipt_file:
+                csv_reader = csv.reader(receipt_file)
+                for rows in csv_reader:
+                    if not rows[2]:
+                        continue
+                    if not rows[4]:
+                        continue
+                    self.item_category_dict[rows[2].strip()] = rows[4].strip()
+                print self.item_category_dict
