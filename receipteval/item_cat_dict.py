@@ -13,10 +13,10 @@ class ItemCategoryDict(object):
 
     def __init__(self):
         file_path = 'KinEtCategories.csv'
+        self.item_category_dict = {}
         if os.path.isfile(file_path):
-            self.item_category_dict = {}
-            with open(file_path, 'r') as receipt_file:
-                csv_reader = csv.reader(receipt_file)
+            with open(file_path, 'r') as category_file:
+                csv_reader = csv.reader(category_file)
                 self.item_category_dict = {rows[0].strip():rows[1].strip() for rows in csv_reader}
         if os.path.isfile('categories.ini'):
             pass
