@@ -18,12 +18,16 @@ class ItemCategoryDict(object):
     def __init__(self):
         file_path = 'KinEtCategories.csv'
         self.item_category_dict = {}
+        self.read_categories(file_path)
+        if os.path.isfile('categories.ini'):
+            pass
+
+    def read_categories(self, file_path):
         if os.path.isfile(file_path):
             with open(file_path, 'r') as category_file:
                 csv_reader = csv.reader(category_file)
                 self.item_category_dict = {rows[0].strip():rows[1].strip() for rows in csv_reader}
-        if os.path.isfile('categories.ini'):
-            pass
+
 
     def getCategory(self, item):
         """Return the category of an item
