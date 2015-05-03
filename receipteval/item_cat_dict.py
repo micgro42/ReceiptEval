@@ -1,6 +1,10 @@
 # -*- coding: utf-8 -*-
+from __future__ import print_function
 import os
+import sys
 import csv
+from collections import OrderedDict
+
 
 """
 provide class item_category_dict
@@ -29,6 +33,19 @@ class ItemCategoryDict(object):
         """
         return self.item_category_dict.get(item,'')
 
+    def updateCatFile(self, receipt_path, category_path = None):
+        if category_path and os.path.isfile(category_path):
+            self.item_category_dict = {}
+            self.read_categories(category_path)
+        else:
+            category_path = 'new_dict.csv'
+        self.extractNew(receipt_path)
+        with open(category_path, 'wb') as category_file:
+            csv_writer = csv.writer(category_file)
+            ordered_categories=OrderedDict(sorted(self.item_category_dict.items(), key=lambda t: (t[1],t[0])))
+            for key, value in ordered_categories.items():
+                csv_writer.writerow([key, value])
+
     def extractNew(self, file_path):
         """ Create new categories file from receipt collection
  
@@ -43,5 +60,11 @@ class ItemCategoryDict(object):
                         continue
                     if not rows[4]:
                         continue
-                    self.item_category_dict[rows[2].strip()] = rows[4].strip()
-                print self.item_category_dict
+                    if rows[2] not in self.item_category_dict:
+                        self.item_category_dict[rows[2].strip()] = rows[4].strip()
+                        continue
+                    if self.item_category_dict[rows[2].strip()] != rows[4].strip():
+                        print (rows[2].strip() + " has two different categories: "
+                                + rows[4].strip() + " and "
+                                + self.item_category_dict[rows[2].strip()], file=sys.stderr)
+
