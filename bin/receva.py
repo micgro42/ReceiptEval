@@ -7,6 +7,8 @@ script_description = ('Evaluate receipts stored as .csv')
 parser = argparse.ArgumentParser(description=script_description)
 parser.add_argument("receipts_file", help="path to the .csv file with " + 
                     "the data from the receipts")
+parser.add_argument("--categories-file",
+                    help="specify which category file to use", metavar=('CATEGORYFILE'))
 parser.add_argument("-c", "--categories", action="store_true",
                     help="show all categories")
 parser.add_argument("--show-category",
@@ -18,6 +20,8 @@ parser.add_argument("-s","--check-sanity", action="store_true",
                     'Does not count the "empty category"')
 parser.add_argument("-S","--check-categories", action="store_true",
                     help='Check Categories')
+parser.add_argument("-u","--update-categories", action="store_true",
+                    help='Update the categories file')
 
 args = parser.parse_args()
 
@@ -44,6 +48,8 @@ elif args.check_sanity:
 elif args.check_categories:
     for (item,inputCategory,storedCategory) in rc.unsane_categories:
         print item + " " + inputCategory + " " + storedCategory
+elif args.update_categories:
+    rc.categoryDict.updateCatFile(args.receipts_file,args.categories_file)
 else:
     for key in rc.categories:
         if key == 'Category':
