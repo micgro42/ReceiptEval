@@ -18,6 +18,7 @@ class ItemCategoryDict(object):
     def __init__(self):
         file_path = 'KinEtCategories.csv'
         self.item_category_dict = {}
+        self.item_comment_dict = {}
         self.read_categories(file_path)
         if os.path.isfile('categories.ini'):
             pass
@@ -26,7 +27,10 @@ class ItemCategoryDict(object):
         if os.path.isfile(file_path):
             with open(file_path, 'r') as category_file:
                 csv_reader = csv.reader(category_file)
-                self.item_category_dict = {rows[0].strip():rows[1].strip() for rows in csv_reader}
+                for rows in csv_reader:
+                    self.item_category_dict[rows[0].strip()] = rows[1].strip()
+                    if rows[2].strip() is not "":
+                        self.item_comment_dict[rows[0].strip()] = rows[2].strip()
 
 
     def getCategory(self, item):
@@ -48,7 +52,11 @@ class ItemCategoryDict(object):
             csv_writer = csv.writer(category_file)
             ordered_categories=OrderedDict(sorted(self.item_category_dict.items(), key=lambda t: (t[1],t[0])))
             for key, value in ordered_categories.items():
-                csv_writer.writerow([key, value])
+                if key in self.item_comment_dict:
+                    comment = self.item_comment_dict[key]
+                else:
+                    comment = ""
+                csv_writer.writerow([key, value,comment])
 
     def extractNew(self, file_path):
         """ Create new categories file from receipt collection
