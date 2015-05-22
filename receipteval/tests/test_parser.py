@@ -54,6 +54,9 @@ def test_categories(factory_file):
 def test_items_in_categories(factory_file):
     with parser() as p:
         rc = p.readFile('receipts_test.csv')
+    empty_dict = ItemCategoryDict()
+    empty_dict.item_category_dict = {}
+    rc.categoryDict = empty_dict
     rc.collectItems()
     assert sorted(rc.categories[''][1]) == sorted(['Kakaopulver',
                                                    'Seidentofu',
@@ -72,6 +75,9 @@ def test_items_in_categories(factory_file):
 def test_category_prices(factory_file):
     with parser() as p:
         rc = p.readFile('receipts_test.csv')
+    empty_dict = ItemCategoryDict()
+    empty_dict.item_category_dict = {}
+    rc.categoryDict = empty_dict
     rc.collectItems()
     assert round(rc.categories[''][0],2) == 30.83
     assert round(rc.categories['Zubrot'][0],2) == 1.69
@@ -89,7 +95,8 @@ def test_unsane_items(factory_file):
 
 
 def test_category_create(factory_file):
-    category_dict = ItemCategoryDict();
+    category_dict = ItemCategoryDict()
+    category_dict.item_category_dict = {}
     category_dict.extractNew('receipts_test.csv')
     assert '' not in category_dict.item_category_dict
     assert 'Bio Company' not in category_dict.item_category_dict
