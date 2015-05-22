@@ -7,17 +7,33 @@ Created on May 10, 2015
 
 from collections import namedtuple
 
-class purchase(object):
+class Purchase(object):
     '''
     classdocs
     '''
 
 
-    def __init__(self, params):
+    def __init__(self, date, shop, *args, **kwargs):
         '''
         Constructor
         '''
-        self.date = params['date']
-        self.shop = params['shop']
-        self.positions = [namedtuple('item', ['name','count','category','ppi','weight'])]
+        self.date = date
+        self.shop = shop
+        self.payment_method = kwargs.get('payment_method','cash')
+        self.positions = []
         self.total = 0.0
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, type, value, traceback):
+        pass
+
+    def addItem(self, name, price, count, **kwargs):
+        Item = namedtuple('item', ['name','category','price','count','weight'])
+        self.positions.append(Item(name,'',price,count,''))
+        self.total += price
+        pass
+
+    def printLedger(self):
+        pass
