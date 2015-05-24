@@ -9,8 +9,6 @@ import os
 from receipteval.parser import parser
 from receipteval.item_cat_dict import ItemCategoryDict
 
-#class ParserTest():
-
 @pytest.fixture()  # Registering this function as a fixture.
 def factory_file(request):
     with open('receipts_test.csv', 'w') as receipt_file:
@@ -44,7 +42,6 @@ def test_readfile(factory_file):
     empty_dict.item_category_dict = {}
     with parser(category_dictionary = empty_dict) as p:
         rc = p.readFile('receipts_test.csv')
-        #rc.collectItems()
     assert rc.purchases[0].date == '29.11.'
     assert rc.purchases[0].shop == 'Bio Company'
     assert rc.purchases[0].positions[0].name == 'Blanc de Pomm'

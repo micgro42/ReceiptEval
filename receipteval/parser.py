@@ -40,7 +40,6 @@ class parser(object):
                 if date is not '' and not inPurchase:
                     inPurchase = True
                     rc.purchases.append(Purchase(date,line[2],category_dict = self.dictionary))
-                    print 'New purchase started: ' + str(line)
                     continue
                 quantity = line[1]
                 name = line[2]
@@ -48,11 +47,10 @@ class parser(object):
                 category = line[4]
                 if name is '' and price is '':
                     inPurchase = False
-                    print 'purchase ended'
                     continue
                 if not inPurchase and (name is '' or price is ''):
                     throw_error('file badly formatted')
-                print 'added new item to purchase: ' + str(line)
+
                 if price is '':
                     rc.unsane_items.append(name)
                 else:
