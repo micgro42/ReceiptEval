@@ -2,14 +2,15 @@
 # encoding: utf-8
 import argparse
 from receipteval.parser import parser as recevap
+from receipteval.item_cat_dict import ItemCategoryDict
 
 script_description = ('Evaluate receipts stored as .csv')
 parser = argparse.ArgumentParser(description=script_description)
 parser.add_argument("receipts_file", help="path to the .csv file with " + 
                     "the data from the receipts")
-parser.add_argument("--categories-file",
+parser.add_argument("-c", "--categories-file",
                     help="specify which category file to use", metavar=('CATEGORYFILE'))
-parser.add_argument("-c", "--categories", action="store_true",
+parser.add_argument("--categories", action="store_true",
                     help="show all categories")
 parser.add_argument("--show-category",
                     help="show all items in a category", metavar=('CATEGORY'))
@@ -25,7 +26,13 @@ parser.add_argument("-u","--update-categories", action="store_true",
 
 args = parser.parse_args()
 
-with recevap() as p:
+parser_args = {}
+
+if args.categories_file:
+    cat_dict = ItemCategoryDict(path = args.categories_file)
+    parser_args['category_dictionary'] = cat_dict
+
+with recevap(**parser_args) as p:
     rc = p.readFile(args.receipts_file)
 
 rc.collectItems()
