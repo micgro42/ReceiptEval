@@ -15,11 +15,16 @@ class ItemCategoryDict(object):
 
     """
 
-    def __init__(self):
-        file_path = 'KinEtCategories.csv'
+    def __init__(self, *args, **kwargs):
+        file_path = kwargs.get('path','KinEtCategories.csv')
         self.item_category_dict = {}
         self.item_comment_dict = {}
-        self.read_categories(file_path)
+        if os.path.isfile(file_path):
+            self.read_categories(file_path)
+        else:
+            pass
+            #print 'no category dictionary provided'
+
         if os.path.isfile('categories.ini'):
             pass
 

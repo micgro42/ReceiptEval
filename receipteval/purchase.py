@@ -34,9 +34,21 @@ class Purchase(object):
     def addItem(self, name, price, count, **kwargs):
         Item = namedtuple('item', ['name','category','price','count','weight'])
         weight = kwargs.get('weight','')
-        category = self.category_dict.getCategory(name)
+        category = kwargs.get('category','')
+        stored_category = self.category_dict.getCategory(name)
+        if category is '' and stored_category is not '':
+            category = stored_category
+        try:
+            price = float(price)
+            self.total += price
+        except ValueError:
+            print 'Price: ' + price
+            print 'Name: ' + name
+            raise
         self.positions.append(Item(name,category,price,count,weight))
-        self.total += price
+
+    def printLegacy(self):
+        pass
 
     def printLedger(self):
         pass

@@ -19,31 +19,17 @@ class receiptCollection(object):
         '''
         self.categories = defaultdict(lambda : [0.0,set()])
         self.receipt_lines = []
+        self.purchases = []
         self.unsane_items = []
         self.unsane_categories = []
         self.categoryDict = ItemCategoryDict()
 
     def collectItems(self):
-        for line in self.receipt_lines:
-            date = line[0]
-            item = line[2].strip()
-            category = line[4]
-            if (date is '' and
-                item is not ''):
-                try:
-                    price = float(line[3])
-                except ValueError:
-                    if (line[3] == ''):
-                        self.unsane_items.append(item)
-                        continue
-                    else:
-                        print 'incorrect price "' + line[3] + '"'
-                        raise
-                storedCategory = self.categoryDict.getCategory(item)
-                if (category == '' and storedCategory != ''):
-                    category = storedCategory
-                self.categories[category][1].add(item)
-                self.categories[category][0] += price
+        for purchase in self.purchases:
+            for item in purchase.positions:
+                self.categories[item.category][1].add(item.name)
+                self.categories[item.category][0] += item.price
+
         self.checkSanity()
         self.calcTotal()
 
