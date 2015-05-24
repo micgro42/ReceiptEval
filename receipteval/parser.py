@@ -39,7 +39,7 @@ class parser(object):
                     raise RuntimeError('file badly formatted: ' + str(line))
                 if date is not '' and not inPurchase:
                     inPurchase = True
-                    rc.purchases.append(Purchase(date,line[1],category_dict = self.dictionary))
+                    rc.purchases.append(Purchase(date,line[2],category_dict = self.dictionary))
                     print 'New purchase started: ' + str(line)
                     continue
                 quantity = line[1]

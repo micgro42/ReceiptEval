@@ -38,15 +38,24 @@ def teardown_factory_file():
     if os.path.isfile("receipts_test.csv"):
         os.remove("receipts_test.csv")
 
-''''
+
 def test_readfile(factory_file):
-    p = parser()
-    p.readFile('receipts_test.csv')
-    assert p.receipt_lines[0] == ['29.11.', '', 'Bio Company', '', '', '', '', '','']
-    assert p.receipt_lines[1] == ['', '1', 'Blanc de Pomm', '1.69', 'Zubrot', '', '', '', '']
-    assert p.receipt_lines[2] == ['', '2', 'Seidentofu', '5.18', '', '', '', '', '']
-    assert p.receipt_lines[3] == ['','','','','','','','','']
-'''
+    empty_dict = ItemCategoryDict()
+    empty_dict.item_category_dict = {}
+    with parser(category_dictionary = empty_dict) as p:
+        rc = p.readFile('receipts_test.csv')
+        #rc.collectItems()
+    assert rc.purchases[0].date == '29.11.'
+    assert rc.purchases[0].shop == 'Bio Company'
+    assert rc.purchases[0].positions[0].name == 'Blanc de Pomm'
+    assert rc.purchases[0].positions[0].price == 1.69
+    assert rc.purchases[0].positions[0].count == "1"
+    assert rc.purchases[0].positions[0].category == 'Zubrot'
+    assert rc.purchases[0].positions[1].name == 'Seidentofu'
+    assert rc.purchases[0].positions[1].price == 5.18
+    assert rc.purchases[0].positions[1].count == "2"
+    assert rc.purchases[0].positions[1].category == ''
+
 
 
 
