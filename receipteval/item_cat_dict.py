@@ -72,7 +72,11 @@ class ItemCategoryDict(object):
         if os.path.isfile(file_path):
             with open(file_path, 'r') as receipt_file:
                 csv_reader = csv.reader(receipt_file)
+                firstRow = True
                 for rows in csv_reader:
+                    if firstRow:
+                        firstRow = False
+                        continue
                     if not rows[2]:
                         continue
                     if not rows[4]:

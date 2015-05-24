@@ -33,7 +33,11 @@ class parser(object):
         inPurchase = False;
         with open(file_path, 'rb') as receipt_file:
             csv_reader = csv.reader(receipt_file)
+            firstLine = True
             for line in csv_reader:
+                if firstLine:
+                    firstLine = False
+                    continue
                 date = line[0]
                 if date is not '' and inPurchase:
                     raise RuntimeError('file badly formatted: ' + str(line))
