@@ -34,8 +34,11 @@ class ItemCategoryDict(object):
                 csv_reader = csv.reader(category_file)
                 for rows in csv_reader:
                     self.item_category_dict[rows[0].strip()] = rows[1].strip()
-                    if rows[2].strip() is not "":
-                        self.item_comment_dict[rows[0].strip()] = rows[2].strip()
+                    try:
+                        if rows[2].strip() is not "":
+                            self.item_comment_dict[rows[0].strip()] = rows[2].strip()
+                    except IndexError:
+                        continue
 
 
     def getCategory(self, item):
