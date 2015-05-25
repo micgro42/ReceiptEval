@@ -23,6 +23,8 @@ parser.add_argument("-S","--check-categories", action="store_true",
                     help='Check Categories')
 parser.add_argument("-u","--update-categories", action="store_true",
                     help='Update the categories file')
+parser.add_argument("-l", "--ledger", action="store_true",
+                    help="show receipts in ledger format ")
 
 args = parser.parse_args()
 
@@ -57,6 +59,9 @@ elif args.check_categories:
         print item + " " + inputCategory + " " + storedCategory
 elif args.update_categories:
     rc.categoryDict.updateCatFile(args.receipts_file,args.categories_file)
+elif args.ledger:
+    ledger = rc.getLedger()
+    print ledger
 else:
     for key in rc.categories:
         if key == 'Category':

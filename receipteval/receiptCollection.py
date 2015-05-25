@@ -54,3 +54,9 @@ class receiptCollection(object):
         self.total = 0.0
         for c in self.categories:
             self.total += self.categories[c][0]
+
+    def getLedger(self):
+        ledger_output = ""
+        for receipt in self.purchases:
+            ledger_output += receipt.getLedger()
+        return ledger_output

@@ -27,4 +27,18 @@ def test_purchase():
         purchase.addItem('Schokolade Erdbeere Joghurt Crisp',1.19,1, weight = '200g')
         assert expected_positions == purchase.positions
         assert purchase.total==5
-    
+
+
+def test_purchase_ledger():
+    cat_dict = ItemCategoryDict()
+    cat_dict.item_category_dict = {'Pfand':'Aktiva:Pfand','Cola':'Ausgaben:Konsum:Cola'}
+    with Purchase('2015-05-21','Testgeschäft',payment_method = 'cash', category_dict = cat_dict) as purchase:
+        purchase.addItem('Cola',0.39,1, weight='1.5l')
+        purchase.addItem('Pfand',0.25,1)
+    actual_output = purchase.getLedger()
+    expected_output = "2015-05-21 Testgeschäft\n"
+    expected_output += "  Aktiva:Portmonaie  -0.64\n"
+    expected_output += "  Ausgaben:Konsum:Cola  0.39\n"
+    expected_output += "  Aktiva:Pfand  0.25\n"
+    expected_output += "\n"
+    assert expected_output == actual_output

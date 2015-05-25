@@ -53,8 +53,18 @@ class Purchase(object):
             raise
         self.positions.append(Item(name,category,price,count,weight))
 
-    def printLegacy(self):
-        pass
+    def getLedger(self):
+        ledgerString = ""
+        ledgerString += self.date + " " + self.shop + "\n"
+        if self.payment_method == "Giro":
+            ledgerString += "  Aktiva:Giro  " + str(-self.total) + "\n"
+        else:
+            ledgerString += "  Aktiva:Portmonaie  " + str(-self.total) + "\n"
+        for position in self.positions:
+            ledgerString += "  " + position.category + "  " + str(position.price) + "\n"
+        ledgerString += "\n"
+        return ledgerString
 
-    def printLedger(self):
+
+    def printLegacy(self):
         pass
