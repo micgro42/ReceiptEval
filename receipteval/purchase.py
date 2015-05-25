@@ -23,13 +23,20 @@ class Purchase(object):
         self.payment_method = kwargs.get('payment_method','cash')
         self.positions = []
         self.category_dict = kwargs.get('category_dict',ItemCategoryDict())
-        self.total = 0.0
+        self._total = 0.0
 
     def __enter__(self):
         return self
 
     def __exit__(self, type, value, traceback):
         pass
+
+    @property
+    def total(self):
+        self._total = 0.0
+        for item in self.positions:
+            self._total += item.price
+        return self._total
 
     def addItem(self, name, price, count, **kwargs):
         Item = namedtuple('item', ['name','category','price','count','weight'])
@@ -40,7 +47,6 @@ class Purchase(object):
             category = stored_category
         try:
             price = float(price)
-            self.total += price
         except ValueError:
             print 'Price: ' + price
             print 'Name: ' + name
