@@ -12,7 +12,8 @@ from receipteval.item_cat_dict import ItemCategoryDict
 @pytest.fixture()  # Registering this function as a fixture.
 def factory_file(request):
     with open('receipts_test.csv', 'w') as receipt_file:
-        receipt_file.writelines(["29.11.,,Bio Company,,,,,,\n",
+        receipt_file.writelines(["Date,Qty,Shop/Item,Price,Category,,,,\n",
+                               "29.11.,,Bio Company,,,,,,\n",
                                ",1,Blanc de Pomm,1.69,Zubrot,,,,\n",
                                ",2,Seidentofu,5.18,,,,,\n",
                                ",,,,,,,,\n",
