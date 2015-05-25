@@ -5,52 +5,38 @@ Created on Nov 30, 2014
 @author: Michael Große <mic.grosse@posteo.de>
 '''
 from collections import defaultdict
-from item_cat_dict import ItemCategoryDict
+from receipteval.item_cat_dict import ItemCategoryDict
+
 
 class receiptCollection(object):
     '''
     classdocs
     '''
 
-
     def __init__(self):
         '''
         Constructor
         '''
-        self.categories = defaultdict(lambda : [0.0,set()])
+        self.categories = defaultdict(lambda: [0.0, set()])
         self.receipt_lines = []
+        self.purchases = []
         self.unsane_items = []
         self.unsane_categories = []
         self.categoryDict = ItemCategoryDict()
+        self.total = 0.0
 
     def collectItems(self):
-        for line in self.receipt_lines:
-            date = line[0]
-            item = line[2].strip()
-            category = line[4]
-            if (date is '' and
-                item is not ''):
-                try:
-                    price = float(line[3])
-                except ValueError:
-                    if (line[3] == ''):
-                        self.unsane_items.append(item)
-                        continue
-                    else:
-                        print 'incorrect price "' + line[3] + '"'
-                        raise
-                storedCategory = self.categoryDict.getCategory(item)
-                if (category == '' and storedCategory != ''):
-                    category = storedCategory
-                self.categories[category][1].add(item)
-                self.categories[category][0] += price
+        for purchase in self.purchases:
+            for item in purchase.positions:
+                self.categories[item.category][1].add(item.name)
+                self.categories[item.category][0] += item.price
+
         self.checkSanity()
         self.calcTotal()
 
-
     def checkCategory(self, c, item):
         storedCategory = self.categoryDict.getCategory(item)
-        if (c != storedCategory):
+        if c != storedCategory:
             self.unsane_categories.append((item, c, storedCategory))
 
     def checkSanity(self):
@@ -59,12 +45,18 @@ class receiptCollection(object):
             if c is '':
                 continue
             for item in self.categories[c][1]:
-                if (item in all_items):
+                if item in all_items:
                     self.unsane_items.append(item)
                 self.checkCategory(c, item)
                 all_items.add(item)
 
     def calcTotal(self):
         self.total = 0.0
-        for c in self.categories:
-            self.total += self.categories[c][0]
+        for category in self.categories:
+            self.total += self.categories[category][0]
+
+    def getLedger(self):
+        ledger_output = ""
+        for receipt in self.purchases:
+            ledger_output += receipt.getLedger()
+        return ledger_output

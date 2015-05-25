@@ -6,36 +6,57 @@ Created on Nov 30, 2014
 '''
 import csv
 from receipteval.receiptCollection import receiptCollection
+from receipteval.purchase import Purchase
+from receipteval.item_cat_dict import ItemCategoryDict
+
 
 class parser(object):
     '''
     classdocs
     '''
 
-    def __init__(self):
+    def __init__(self, *args, **kwargs):
         '''
         Constructor
         '''
-        self.receipt_lines = []
+        self.dictionary = kwargs.get('category_dictionary', ItemCategoryDict())
 
     def __enter__(self):
         return self
 
     def __exit__(self, thetype, value, traceback):
         pass
-        #return True # todo: is this line necessary? 
 
     def readFile(self, file_path):
-        with open(file_path, 'rb') as receipt_file:
-            csv_reader = csv.reader(receipt_file)
-            for line in csv_reader:
-                self.receipt_lines.append(line)
-
         rc = receiptCollection()
-        for i,line in enumerate(self.receipt_lines):
-            if line[4] not in rc.categories:
-                rc.categories[line[4]] = [0.0,set()]
+        inPurchase = False
+        with open(file_path, 'r') as receipt_file:
+            csv_reader = csv.reader(receipt_file)
+            firstLine = True
+            for line in csv_reader:
+                if firstLine:
+                    firstLine = False
+                    continue
+                date = line[0]
+                if date is not '' and inPurchase:
+                    raise RuntimeError('file badly formatted: ' + str(line))
+                if date is not '' and not inPurchase:
+                    inPurchase = True
+                    rc.purchases.append(Purchase(date=date, shop=line[2], category_dict=self.dictionary))
+                    continue
+                quantity = line[1]
+                name = line[2]
+                price = line[3]
+                category = line[4]
+                if name is '' and price is '':
+                    inPurchase = False
+                    continue
+                if not inPurchase and (name is '' or price is ''):
+                    raise RuntimeError('file badly formatted: ' + str(line))
 
-        # /todo: add cleanup, remove empty lines, etc. #todo TODO
-        rc.receipt_lines = self.receipt_lines
+                if price is '':
+                    rc.unsane_items.append(name)
+                else:
+                    rc.purchases[-1].addItem(name, price, quantity, category=category)
+
         return rc
