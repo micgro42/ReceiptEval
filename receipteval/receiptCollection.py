@@ -55,8 +55,9 @@ class receiptCollection(object):
         for category in self.categories:
             self.total += self.categories[category][0]
 
-    def getLedger(self):
+    def getLedger(self, date = '1900-01-01'):
         ledger_output = ""
-        for receipt in self.purchases:
-            ledger_output += receipt.getLedger()
+        for receipt in sorted(self.purchases, key=lambda t: t._date):
+            if receipt.date >= date:
+                ledger_output += receipt.getLedger()
         return ledger_output

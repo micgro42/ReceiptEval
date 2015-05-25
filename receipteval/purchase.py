@@ -7,6 +7,7 @@ Created on May 10, 2015
 from __future__ import print_function
 from collections import namedtuple
 from receipteval.item_cat_dict import ItemCategoryDict
+from receipteval.helper import validate
 
 
 class Purchase(object):
@@ -18,6 +19,7 @@ class Purchase(object):
         '''
         Constructor
         '''
+        self._date = None
         self.date = date
         self.shop = shop
         self.payment_method = kwargs.get('payment_method', 'cash')
@@ -28,7 +30,7 @@ class Purchase(object):
     def __enter__(self):
         return self
 
-    def __exit__(self, type, value, traceback):
+    def __exit__(self, exception_type, exception_value, traceback):
         pass
 
     @property
@@ -37,6 +39,14 @@ class Purchase(object):
         for item in self.positions:
             self._total += item.price
         return self._total
+
+    @property
+    def date(self):
+        return self._date.strftime('%Y-%m-%d')
+
+    @date.setter
+    def date(self, value):
+        self._date = validate(value)
 
     def addItem(self, name, price, count, **kwargs):
         Item = namedtuple('item', ['name', 'category', 'price', 'count', 'weight'])

@@ -10,7 +10,7 @@ from receipteval.item_cat_dict import ItemCategoryDict
 def test_purchase():
     expected_positions = []
     cat_dict = ItemCategoryDict()
-    cat_dict.item_category_dict = {'Pfand':'Pfand','Cola Zero':'Cola'}
+    cat_dict.item_category_dict = {'Pfand': 'Pfand', 'Cola Zero': 'Cola'}
     Position = namedtuple('item', ['name','category','price','count','weight'])
     expected_positions.append(Position('Cola Zero','Cola',0.39,1,'1.5l'))
     expected_positions.append(Position('Pfand','Pfand',0.25,1,''))

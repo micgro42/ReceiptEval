@@ -3,6 +3,7 @@
 import argparse
 from receipteval.parser import parser as recevap
 from receipteval.item_cat_dict import ItemCategoryDict
+from receipteval.helper import simplify_category
 
 script_description = ('Evaluate receipts stored as .csv')
 parser = argparse.ArgumentParser(description=script_description)
@@ -25,6 +26,8 @@ parser.add_argument("-u", "--update-categories", action="store_true",
                     help='Update the categories file')
 parser.add_argument("-l", "--ledger", action="store_true",
                     help="show receipts in ledger format ")
+parser.add_argument("-d", "--date", metavar=('date'), default="1900-01-01",
+                    help="show only output from this day on")
 
 args = parser.parse_args()
 
@@ -60,14 +63,15 @@ elif args.check_categories:
 elif args.update_categories:
     rc.categoryDict.updateCatFile(args.receipts_file, args.categories_file)
 elif args.ledger:
-    ledger = rc.getLedger()
+    ledger = rc.getLedger(args.date)
     print ledger
 else:
     for key in rc.categories:
         if key == 'Category':
             continue
+        simpleKey = simplify_category(key)
         catTotal = rc.categories[key][0]
-        print "{0:6.2f}".format(catTotal) + ' ' + "{0:4.1f}".format(catTotal/rc.total*100.0) + "% " + key + " ({0:d})".format(len(rc.categories[key][1]))
+        print "{0:6.2f}".format(catTotal) + ' ' + "{0:4.1f}".format(catTotal/rc.total*100.0) + "% " + simpleKey + " ({0:d})".format(len(rc.categories[key][1]))
     print "{0:6.2f}".format(rc.total) + "       " + "Total"
 
 

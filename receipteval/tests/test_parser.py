@@ -13,11 +13,11 @@ from receipteval.item_cat_dict import ItemCategoryDict
 def factory_file(request):
     with open('receipts_test.csv', 'w') as receipt_file:
         receipt_file.writelines(["Date,Qty,Shop/Item,Price,Category,,,,\n",
-                               "29.11.,,Bio Company,,,,,,\n",
+                               "2015-11-29,,Bio Company,,,,,,\n",
                                ",1,Blanc de Pomm,1.69,Zubrot,,,,\n",
                                ",2,Seidentofu,5.18,,,,,\n",
                                ",,,,,,,,\n",
-                               "1.11.2014,,Bio Company,,,46.00,,,\n",
+                               "2014-11-01,,Bio Company,Giro,,46.00,,,\n",
                                ",2,Risotto,4.38,Kochzutaten,,,,\n",
                                ",,Sesam,3.69,,,,,\n",
                                ",,Cashewbruch,10.99,,,,,\n",
@@ -43,8 +43,9 @@ def test_readfile(factory_file):
     empty_dict.item_category_dict = {}
     with parser(category_dictionary = empty_dict) as p:
         rc = p.readFile('receipts_test.csv')
-    assert rc.purchases[0].date == '29.11.'
+    assert rc.purchases[0].date == '2015-11-29'
     assert rc.purchases[0].shop == 'Bio Company'
+    assert rc.purchases[0].payment_method == 'cash'
     assert rc.purchases[0].positions[0].name == 'Blanc de Pomm'
     assert rc.purchases[0].positions[0].price == 1.69
     assert rc.purchases[0].positions[0].count == "1"
@@ -53,6 +54,9 @@ def test_readfile(factory_file):
     assert rc.purchases[0].positions[1].price == 5.18
     assert rc.purchases[0].positions[1].count == "2"
     assert rc.purchases[0].positions[1].category == ''
+    assert rc.purchases[1].date == '2014-11-01'
+    assert rc.purchases[1].shop == 'Bio Company'
+    assert rc.purchases[1].payment_method == 'Giro'
 
 
 
