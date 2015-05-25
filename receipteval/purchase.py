@@ -4,7 +4,7 @@ Created on May 10, 2015
 
 @author: Michael Große <mic.grosse@posteo.de>
 '''
-
+from __future__ import print_function
 from collections import namedtuple
 from receipteval.item_cat_dict import ItemCategoryDict
 
@@ -48,8 +48,8 @@ class Purchase(object):
         try:
             price = float(price)
         except ValueError:
-            print 'Price: ' + price
-            print 'Name: ' + name
+            print ('Price: ' + price)
+            print ('Name: ' + name)
             raise
         self.positions.append(Item(name, category, price, count, weight))
 

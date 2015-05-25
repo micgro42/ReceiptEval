@@ -6,7 +6,6 @@ Created on Nov 30, 2014
 '''
 import csv
 from receipteval.receiptCollection import receiptCollection
-from numpy.f2py.auxfuncs import throw_error
 from receipteval.purchase import Purchase
 from receipteval.item_cat_dict import ItemCategoryDict
 
@@ -31,7 +30,7 @@ class parser(object):
     def readFile(self, file_path):
         rc = receiptCollection()
         inPurchase = False
-        with open(file_path, 'rb') as receipt_file:
+        with open(file_path, 'r') as receipt_file:
             csv_reader = csv.reader(receipt_file)
             firstLine = True
             for line in csv_reader:
@@ -53,7 +52,7 @@ class parser(object):
                     inPurchase = False
                     continue
                 if not inPurchase and (name is '' or price is ''):
-                    throw_error('file badly formatted')
+                    raise RuntimeError('file badly formatted: ' + str(line))
 
                 if price is '':
                     rc.unsane_items.append(name)
