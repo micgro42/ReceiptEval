@@ -34,7 +34,7 @@ def test_category_wrong():
                                           }
     rC.checkCategory('Obst','Heumilch')
     assert rC.unsane_categories[0] == ('Heumilch', 'Obst', 'Milch')
-    
+
 def test_category_missing():
     rC = receiptCollection()
     rC.categoryDict.item_category_dict = {
@@ -51,7 +51,7 @@ def test_category_stored_missing():
     rC = receiptCollection()
     rC.checkCategory('Testcategory','Testitem')
     assert rC.unsane_categories[0] == ('Testitem', 'Testcategory', '')
-    
+
 def test_category_both_missing():
     rC = receiptCollection()
     rC.checkCategory('','Testitem')

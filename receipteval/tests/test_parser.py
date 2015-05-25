@@ -96,7 +96,7 @@ def test_category_prices(factory_file):
     assert round(rc.categories['Kochzutaten'][0],2) == 4.38
     assert round(rc.categories['Obst'][0],2) == 5.20
     assert round(rc.categories['Gewürze'][0],2) == 10.77
-    
+
 def test_unsane_items(factory_file):
     with parser() as p:
         rc = p.readFile('receipts_test.csv')
@@ -110,7 +110,7 @@ def test_category_create(factory_file):
     category_dict.extractNew('receipts_test.csv')
     assert '' not in category_dict.item_category_dict
     assert 'Bio Company' not in category_dict.item_category_dict
-    assert category_dict.item_category_dict['Blanc de Pomm'] == 'Zubrot';
+    assert category_dict.item_category_dict['Blanc de Pomm'] == 'Zubrot'
 
 
 

@@ -8,21 +8,21 @@ Created on May 10, 2015
 from collections import namedtuple
 from receipteval.item_cat_dict import ItemCategoryDict
 
+
 class Purchase(object):
     '''
     classdocs
     '''
 
-
-    def __init__(self, date, shop, *args, **kwargs):
+    def __init__(self, date, shop, **kwargs):
         '''
         Constructor
         '''
         self.date = date
         self.shop = shop
-        self.payment_method = kwargs.get('payment_method','cash')
+        self.payment_method = kwargs.get('payment_method', 'cash')
         self.positions = []
-        self.category_dict = kwargs.get('category_dict',ItemCategoryDict())
+        self.category_dict = kwargs.get('category_dict', ItemCategoryDict())
         self._total = 0.0
 
     def __enter__(self):
@@ -39,9 +39,9 @@ class Purchase(object):
         return self._total
 
     def addItem(self, name, price, count, **kwargs):
-        Item = namedtuple('item', ['name','category','price','count','weight'])
-        weight = kwargs.get('weight','')
-        category = kwargs.get('category','')
+        Item = namedtuple('item', ['name', 'category', 'price', 'count', 'weight'])
+        weight = kwargs.get('weight', '')
+        category = kwargs.get('category', '')
         stored_category = self.category_dict.getCategory(name)
         if category is '' and stored_category is not '':
             category = stored_category
@@ -51,7 +51,7 @@ class Purchase(object):
             print 'Price: ' + price
             print 'Name: ' + name
             raise
-        self.positions.append(Item(name,category,price,count,weight))
+        self.positions.append(Item(name, category, price, count, weight))
 
     def getLedger(self):
         ledgerString = ""
@@ -64,7 +64,6 @@ class Purchase(object):
             ledgerString += "  " + position.category + "  " + str(position.price) + "\n"
         ledgerString += "\n"
         return ledgerString
-
 
     def printLegacy(self):
         pass

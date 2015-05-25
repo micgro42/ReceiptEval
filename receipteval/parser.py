@@ -10,27 +10,27 @@ from numpy.f2py.auxfuncs import throw_error
 from receipteval.purchase import Purchase
 from receipteval.item_cat_dict import ItemCategoryDict
 
+
 class parser(object):
     '''
     classdocs
     '''
 
-    def __init__(self,*args, **kwargs):
+    def __init__(self, *args, **kwargs):
         '''
         Constructor
         '''
-        self.dictionary = kwargs.get('category_dictionary',ItemCategoryDict())
+        self.dictionary = kwargs.get('category_dictionary', ItemCategoryDict())
 
     def __enter__(self):
         return self
 
     def __exit__(self, thetype, value, traceback):
         pass
-        #return True # todo: is this line necessary? 
 
     def readFile(self, file_path):
         rc = receiptCollection()
-        inPurchase = False;
+        inPurchase = False
         with open(file_path, 'rb') as receipt_file:
             csv_reader = csv.reader(receipt_file)
             firstLine = True
@@ -43,7 +43,7 @@ class parser(object):
                     raise RuntimeError('file badly formatted: ' + str(line))
                 if date is not '' and not inPurchase:
                     inPurchase = True
-                    rc.purchases.append(Purchase(date,line[2],category_dict = self.dictionary))
+                    rc.purchases.append(Purchase(date=date, shop=line[2], category_dict=self.dictionary))
                     continue
                 quantity = line[1]
                 name = line[2]
@@ -58,6 +58,6 @@ class parser(object):
                 if price is '':
                     rc.unsane_items.append(name)
                 else:
-                    rc.purchases[-1].addItem(name,price,quantity,category=category)
+                    rc.purchases[-1].addItem(name, price, quantity, category=category)
 
         return rc
