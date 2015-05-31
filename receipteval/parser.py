@@ -57,7 +57,7 @@ class parser(object):
                 if name is '' and price is '':
                     inPurchase = False
                     continue
-                if not inPurchase and (name is '' or price is ''):
+                if not inPurchase and (name is '' or price is '' or date is ''):
                     raise RuntimeError('file badly formatted: ' + str(line))
 
                 if price is '':
