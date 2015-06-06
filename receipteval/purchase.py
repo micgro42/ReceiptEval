@@ -68,8 +68,10 @@ class Purchase(object):
         ledgerString += self.date + " " + self.shop + "\n"
         if self.payment_method == "Giro":
             ledgerString += "  Aktiva:Giro  " + str(-self.total) + "\n"
-        else:
+        elif self.payment_method == "cash":
             ledgerString += "  Aktiva:Portmonaie  " + str(-self.total) + "\n"
+        else:
+            ledgerString += "  " + self.payment_method + "  " + str(-self.total) + "\n"
         for position in self.positions:
             ledgerString += "  " + position.category + "  " + str(position.price) + "\n"
         ledgerString += "\n"
