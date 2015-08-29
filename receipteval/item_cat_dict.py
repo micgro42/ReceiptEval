@@ -57,8 +57,8 @@ class ItemCategoryDict(object):
         else:
             category_path = 'new_dict.csv'
         self.extractNew(receipt_path)
-        with open(category_path, 'wb') as category_file:
-            csv_writer = csv.writer(category_file)
+        with open(category_path, 'w') as category_file:
+            csv_writer = csv.writer(category_file, lineterminator='\n')
             ordered_categories = OrderedDict(sorted(self.item_category_dict.items(), key=lambda t: (t[1], t[0])))
             for key, value in ordered_categories.items():
                 if key in self.item_comment_dict:
