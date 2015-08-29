@@ -47,7 +47,11 @@ class parser(object):
                     payment_method = line[3]
                     if payment_method is '':
                         payment_method = 'cash'
-                    rc.purchases.append(Purchase(date=date, shop=line[2], category_dict=self.dictionary, payment_method=payment_method))
+                    rc.purchases.append(Purchase(date=date,
+                                                 shop=line[2],
+                                                 category_dict=self.dictionary,
+                                                 payment_method=payment_method,
+                                                 flags=line[1]))
 
                     continue
                 quantity = line[1]
@@ -63,6 +67,9 @@ class parser(object):
                 if price is '':
                     rc.unsane_items.append(name)
                 else:
-                    rc.purchases[-1].addItem(name, price, quantity, category=category)
+                    rc.purchases[-1].addItem(name,
+                                             price,
+                                             quantity,
+                                             category=category)
 
         return rc
