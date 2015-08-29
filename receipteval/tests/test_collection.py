@@ -12,8 +12,7 @@ from collections import namedtuple
 
 def test_category_correct():
     rC = receiptCollection()
-    rC.categoryDict.item_category_dict = {
-                                          'Pfand': 'Pfand',
+    rC.categoryDict.item_category_dict = {'Pfand': 'Pfand',
                                           'Pesto': 'Pesto',
                                           'Parmesan': 'Käse',
                                           'Heumilch': 'Milch',
@@ -25,8 +24,7 @@ def test_category_correct():
 
 def test_category_wrong():
     rC = receiptCollection()
-    rC.categoryDict.item_category_dict = {
-                                          'Pfand': 'Pfand',
+    rC.categoryDict.item_category_dict = {'Pfand': 'Pfand',
                                           'Pesto': 'Pesto',
                                           'Parmesan': 'Käse',
                                           'Heumilch': 'Milch',
@@ -38,8 +36,7 @@ def test_category_wrong():
 
 def test_category_missing():
     rC = receiptCollection()
-    rC.categoryDict.item_category_dict = {
-                                          'Pfand': 'Pfand',
+    rC.categoryDict.item_category_dict = {'Pfand': 'Pfand',
                                           'Pesto': 'Pesto',
                                           'Parmesan': 'Käse',
                                           'Heumilch': 'Milch',

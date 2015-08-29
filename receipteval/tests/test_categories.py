@@ -19,13 +19,12 @@ class Test(unittest.TestCase):
 
     def test_category(self):
         category_dict = ItemCategoryDict()
-        category_dict.item_category_dict = {
-                                          'Pfand': 'Pfand',
-                                          'Pesto': 'Pesto',
-                                          'Parmesan': 'Käse',
-                                          'Heumilch': 'Milch',
-                                          'Milch': 'Milch',
-                                          }
+        category_dict.item_category_dict = {'Pfand': 'Pfand',
+                                            'Pesto': 'Pesto',
+                                            'Parmesan': 'Käse',
+                                            'Heumilch': 'Milch',
+                                            'Milch': 'Milch',
+                                            }
         cat_milch = category_dict.getCategory('Milch')
         assert cat_milch == 'Milch'
 
