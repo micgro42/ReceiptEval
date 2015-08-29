@@ -4,24 +4,21 @@ Created on Apr 19, 2015
 
 @author: Michael Große <mic.grosse@posteo.de>
 '''
-import pytest
+
 import unittest
 from receipteval.item_cat_dict import ItemCategoryDict
 
 
 class Test(unittest.TestCase):
 
-
     def setUp(self):
         pass
-
 
     def tearDown(self):
         pass
 
-
     def test_category(self):
-        category_dict = ItemCategoryDict();
+        category_dict = ItemCategoryDict()
         category_dict.item_category_dict = {
                                           'Pfand': 'Pfand',
                                           'Pesto': 'Pesto',
@@ -34,5 +31,5 @@ class Test(unittest.TestCase):
 
 
 if __name__ == "__main__":
-    #import sys;sys.argv = ['', 'Test.testName']
+    # import sys;sys.argv = ['', 'Test.testName']
     unittest.main()
