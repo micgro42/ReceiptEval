@@ -62,3 +62,21 @@ def test_purchase_ledger():
     expected_output += "  Aktiva:Pfand  0.25\n"
     expected_output += "\n"
     assert expected_output == actual_output
+
+
+def test_purchase_ledger_only():
+    cat_dict = ItemCategoryDict()
+    cat_dict.item_category_dict = {'Pfand': 'Aktiva:Pfand',
+                                   'Cola': 'Ausgaben:Konsum:Cola'}
+    with Purchase('2015-05-21',
+                  'Übertrag',
+                  payment_method='Giro',
+                  category_dict=cat_dict,
+                  flags='L') as purchase:
+        purchase.addItem('Auszahlung', 100, 1, category='Aktiva:Portmonaie')
+    actual_output = purchase.getLedger()
+    expected_output = "2015-05-21 Übertrag\n"
+    expected_output += "  Aktiva:Giro  -100.0\n"
+    expected_output += "  Aktiva:Portmonaie  100.0\n"
+    expected_output += "\n"
+    assert expected_output == actual_output
