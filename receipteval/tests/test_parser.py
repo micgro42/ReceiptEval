@@ -31,7 +31,11 @@ def factory_file(request):
                                  ",,Kakaopulver,2.19,,,,,\n",
                                  ',,"Basilikum, frisch",1.99,Gewürze,,,,\n',
                                  ',,Item without Price,,Mehl,,,,\n',
-                                 ",2,Roggenmehl,3.98,Obst,,,,\n"])
+                                 ",2,Roggenmehl,3.98,Obst,,,,\n",
+                                 ",,,,,,,,\n",
+                                 "2015-11-17,L,Übertrag,Giro,,,,,\n",
+                                 ",,Abhebung,100,Aktiva:Portmonaie,,,,,\n",
+                                 ])
     request.addfinalizer(teardown_factory_file)
 
 
@@ -127,3 +131,11 @@ def test_category_create(factory_file):
     assert '' not in category_dict.item_category_dict
     assert 'Bio Company' not in category_dict.item_category_dict
     assert category_dict.item_category_dict['Blanc de Pomm'] == 'Zubrot'
+
+
+def test_ledger_only_items(factory_file):
+    with parser() as p:
+        rc = p.readFile('receipts_test.csv')
+    assert not rc.purchases[0].flags['ledger']
+    assert not rc.purchases[1].flags['ledger']
+    assert rc.purchases[2].flags['ledger']
