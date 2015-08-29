@@ -23,9 +23,11 @@ class Purchase(object):
         self.date = date
         self.shop = shop
         self.payment_method = kwargs.get('payment_method', 'cash')
-        self.positions = []
+        self._positions = []
         self.category_dict = kwargs.get('category_dict', ItemCategoryDict())
         self._total = 0.0
+        self.flags = {}
+        self.extractFlags(kwargs.get('flags', ''))
 
     def __enter__(self):
         return self
@@ -33,10 +35,27 @@ class Purchase(object):
     def __exit__(self, exception_type, exception_value, traceback):
         pass
 
+    def extractFlags(self, flags):
+        if flags is 'L':
+            self.flags['ledger'] = True
+        else:
+            self.flags['ledger'] = False
+
+    @property
+    def positions(self):
+        if not self.flags['ledger']:
+            return self._positions
+        else:
+            return []
+
+    @positions.setter
+    def positions(self, value):
+        self._positions.append(value)
+
     @property
     def total(self):
         self._total = 0.0
-        for item in self.positions:
+        for item in self._positions:
             self._total += item.price
         return self._total
 
@@ -61,7 +80,7 @@ class Purchase(object):
             print ('Price: ' + price)
             print ('Name: ' + name)
             raise
-        self.positions.append(Item(name, category, price, count, weight))
+        self.positions = Item(name, category, price, count, weight)
 
     def getLedger(self):
         ledgerString = ""
@@ -72,7 +91,7 @@ class Purchase(object):
             ledgerString += "  Aktiva:Portmonaie  " + str(-self.total) + "\n"
         else:
             ledgerString += "  " + self.payment_method + "  " + str(-self.total) + "\n"
-        for position in self.positions:
+        for position in self._positions:
             ledgerString += "  " + position.category + "  " + str(position.price) + "\n"
         ledgerString += "\n"
         return ledgerString
