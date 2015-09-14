@@ -45,7 +45,7 @@ class parser(object):
                     continue
 
                 date = line[0]
-                if date is not '' and inPurchase:
+                if inPurchase and date is not '':
                     raise RuntimeError('file badly formatted: ' + str(line))
                 if date is not '' and not inPurchase:
                     date = validate_date(date_text=date)
