@@ -38,6 +38,12 @@ class parser(object):
                 if firstLine:
                     firstLine = False
                     continue
+
+                # empty lines: end purchase and otherwise skip
+                if line[0] is '' and line[2] is '' and line[3] is '':
+                    inPurchase = False
+                    continue
+
                 date = line[0]
                 if date is not '' and inPurchase:
                     raise RuntimeError('file badly formatted: ' + str(line))
@@ -58,9 +64,6 @@ class parser(object):
                 name = line[2]
                 price = line[3]
                 category = line[4]
-                if name is '' and price is '':
-                    inPurchase = False
-                    continue
                 if not inPurchase and (name is '' or price is '' or date is ''):
                     raise RuntimeError('file badly formatted: ' + str(line))
 
