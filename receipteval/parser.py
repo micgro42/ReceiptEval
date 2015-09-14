@@ -52,7 +52,7 @@ class parser(object):
                     raise RuntimeError('file badly formatted: ' + str(line))
 
                 # start a new purchase and then read the next line
-                if date is not '' and not purchaseIsActive:
+                if not purchaseIsActive and date is not '':
                     date = validate_date(date_text=date)
                     purchaseIsActive = True
                     payment_method = line[3]
@@ -63,7 +63,6 @@ class parser(object):
                                                  category_dict=self.dictionary,
                                                  payment_method=payment_method,
                                                  flags=line[1]))
-
                     continue
 
                 quantity = line[1]
