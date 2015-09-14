@@ -8,7 +8,7 @@ import csv
 from receipteval.receiptCollection import receiptCollection
 from receipteval.purchase import Purchase
 from receipteval.item_cat_dict import ItemCategoryDict
-from receipteval.helper import validate
+from receipteval.helper import validate_date
 
 
 class parser(object):
@@ -42,7 +42,7 @@ class parser(object):
                 if date is not '' and inPurchase:
                     raise RuntimeError('file badly formatted: ' + str(line))
                 if date is not '' and not inPurchase:
-                    date = validate(date_text=date)
+                    date = validate_date(date_text=date)
                     inPurchase = True
                     payment_method = line[3]
                     if payment_method is '':

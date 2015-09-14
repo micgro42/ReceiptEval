@@ -10,7 +10,7 @@ from datetime import date
 from _warnings import warn
 
 
-def validate(date_text):
+def validate_date(date_text):
     '''
     validate that the parameter is actually a date string and return the date
     throw an exception otherwise

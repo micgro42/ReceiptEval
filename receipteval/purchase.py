@@ -7,7 +7,7 @@ Created on May 10, 2015
 from __future__ import print_function
 from collections import namedtuple
 from receipteval.item_cat_dict import ItemCategoryDict
-from receipteval.helper import validate
+from receipteval.helper import validate_date
 
 
 class Purchase(object):
@@ -65,7 +65,7 @@ class Purchase(object):
 
     @date.setter
     def date(self, value):
-        self._date = validate(value)
+        self._date = validate_date(value)
 
     def addItem(self, name, price, count, **kwargs):
         Item = namedtuple('item', ['name', 'category', 'price', 'count', 'weight'])
