@@ -45,8 +45,13 @@ class parser(object):
                     continue
 
                 date = line[0]
+
+                # only the heading of a purchase should have content in the
+                # date field
                 if inPurchase and date is not '':
                     raise RuntimeError('file badly formatted: ' + str(line))
+
+                # start a new purchase and then read the next line
                 if date is not '' and not inPurchase:
                     date = validate_date(date_text=date)
                     inPurchase = True
@@ -60,6 +65,7 @@ class parser(object):
                                                  flags=line[1]))
 
                     continue
+
                 quantity = line[1]
                 name = line[2]
                 price = line[3]
