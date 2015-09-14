@@ -30,7 +30,7 @@ class parser(object):
 
     def readFile(self, file_path):
         rc = receiptCollection()
-        inPurchase = False
+        purchaseIsActive = False
         with open(file_path, 'r') as receipt_file:
             csv_reader = csv.reader(receipt_file)
             firstLine = True
@@ -41,20 +41,20 @@ class parser(object):
 
                 # empty lines: end purchase and otherwise skip
                 if line[0] is '' and line[2] is '' and line[3] is '':
-                    inPurchase = False
+                    purchaseIsActive = False
                     continue
 
                 date = line[0]
 
                 # only the heading of a purchase should have content in the
                 # date field
-                if inPurchase and date is not '':
+                if purchaseIsActive and date is not '':
                     raise RuntimeError('file badly formatted: ' + str(line))
 
                 # start a new purchase and then read the next line
-                if date is not '' and not inPurchase:
+                if date is not '' and not purchaseIsActive:
                     date = validate_date(date_text=date)
-                    inPurchase = True
+                    purchaseIsActive = True
                     payment_method = line[3]
                     if payment_method is '':
                         payment_method = 'cash'
@@ -70,7 +70,7 @@ class parser(object):
                 name = line[2]
                 price = line[3]
                 category = line[4]
-                if not inPurchase and (name is '' or price is '' or date is ''):
+                if not purchaseIsActive and (name is '' or price is '' or date is ''):
                     raise RuntimeError('file badly formatted: ' + str(line))
 
                 if price is '':
