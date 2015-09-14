@@ -17,8 +17,8 @@ class TestCSV(unittest.TestCase):
     def tearDown(self):
         pass
 
-    def test_csv_write(tmpdir):
-        with open('testfile.csv', 'wb') as testfile:
+    def test_csv_write(self):
+        with open('testfile.csv', 'w') as testfile:
             csv_writer = csv.writer(testfile, lineterminator='\n')
             csv_writer.writerow(["foo", "bar"])
             csv_writer.writerow(["baz", "foobar"])
