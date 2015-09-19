@@ -18,7 +18,6 @@ class receiptCollection(object):
         Constructor
         '''
         self.categories = defaultdict(lambda: [0.0, set()])
-        self.receipt_lines = []
         self.purchases = []
         self.unsane_items = []
         self.unsane_categories = []
