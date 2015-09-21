@@ -21,7 +21,8 @@ class parser(object):
         Constructor
         '''
         self.dictionary = kwargs.get('category_dictionary', ItemCategoryDict())
-        self.purchaseIsActive = False
+        self.purchaseIsActive = None
+        self.activePurchase = None
         self.rc = receiptCollection()
 
     def __enter__(self):
@@ -42,11 +43,11 @@ class parser(object):
         payment_method = line[3]
         if payment_method is '':
             payment_method = 'cash'
-        self.rc.purchases.append(Purchase(date=date,
-                                          shop=line[2],
-                                          category_dict=self.dictionary,
-                                          payment_method=payment_method,
-                                          flags=line[1]))
+        self.activePurchase = Purchase(date=date,
+                                       shop=line[2],
+                                       category_dict=self.dictionary,
+                                       payment_method=payment_method,
+                                       flags=line[1])
 
     def handleOutOfPurchaseLine(self, line):
         if self.checkLineEmptyEnough(line):
@@ -59,17 +60,22 @@ class parser(object):
 
     def handleInPurchaseLine(self, line):
         if self.checkLineEmptyEnough(line):
-            self.purchaseIsActive = False
+            self.rc.purchases.append(self.activePurchase)
+            self.activePurchase = None
             return
-        if line[0] is not '':
+        if line[0] is not '' or line[2] is '':
             raise RuntimeError('file badly formatted: ' + str(line))
         if line[3] is '':
             self.rc.unsane_items.append(line[2])
         else:
-            self.rc.purchases[-1].addItem(name=line[2],
-                                          price=line[3],
-                                          count=line[1],
-                                          category=line[4])
+            self.activePurchase.addItem(name=line[2],
+                                        price=line[3],
+                                        count=line[1],
+                                        category=line[4])
+
+    def cleanUp(self):
+        if self.activePurchase is not None:
+            self.rc.purchases.append(self.activePurchase)
 
     def readFile(self, file_path):
         with open(file_path, 'r') as receipt_file:
@@ -79,10 +85,9 @@ class parser(object):
                 if firstLine:
                     firstLine = False
                     continue
-
-                if self.purchaseIsActive:
-                    self.handleInPurchaseLine(line)
-                else:
+                if self.activePurchase is None:
                     self.handleOutOfPurchaseLine(line)
-
+                else:
+                    self.handleInPurchaseLine(line)
+        self.cleanUp()
         return self.rc
