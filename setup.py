@@ -22,12 +22,14 @@ class PyTest(TestCommand):
 
 here = path.abspath(path.dirname(__file__))
 
-# Utility function to read the README file.
-# Used for the long_description.  It's nice, because now 1) we have a top level
-# README file and 2) it's easier to type in the README file than to put a raw
-# string in below ...
-with open(path.join(here, 'README.md'), encoding='utf-8') as f:
-    long_description = f.read()
+
+# inspired by: https://stackoverflow.com/questions/10718767/have-the-same-readme-both-in-markdown-and-restructuredtext
+try:
+    from pypandoc import convert
+    read_md = lambda f: convert(f, 'rst')
+except ImportError:
+    print("warning: pypandoc module not found, could not convert Markdown to RST")
+    read_md = lambda f: open(f, 'r').read()
 
 setup(
     name='receipteval',
@@ -38,7 +40,7 @@ setup(
     version=receipteval.__version__,
 
     description='Evaluate list of recipes saved as .csv.',
-    long_description=long_description,
+    long_description=read_md("README.md"),
 
     # The project's main homepage.
     url='https://github.com/micgro42/ReceiptEval/',
