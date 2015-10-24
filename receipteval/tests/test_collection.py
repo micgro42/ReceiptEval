@@ -5,13 +5,13 @@ Created on Apr 19, 2015
 @author: Michael Große <mic.grosse@posteo.de>
 '''
 
-from receipteval.receiptCollection import receiptCollection
+from receipteval.receiptCollection import ReceiptCollection
 from receipteval.purchase import Purchase
 from collections import namedtuple
 
 
 def test_category_correct():
-    rC = receiptCollection()
+    rC = ReceiptCollection()
     rC.categoryDict.item_category_dict = {'Pfand': 'Pfand',
                                           'Pesto': 'Pesto',
                                           'Parmesan': 'Käse',
@@ -23,7 +23,7 @@ def test_category_correct():
 
 
 def test_category_wrong():
-    rC = receiptCollection()
+    rC = ReceiptCollection()
     rC.categoryDict.item_category_dict = {'Pfand': 'Pfand',
                                           'Pesto': 'Pesto',
                                           'Parmesan': 'Käse',
@@ -35,7 +35,7 @@ def test_category_wrong():
 
 
 def test_category_missing():
-    rC = receiptCollection()
+    rC = ReceiptCollection()
     rC.categoryDict.item_category_dict = {'Pfand': 'Pfand',
                                           'Pesto': 'Pesto',
                                           'Parmesan': 'Käse',
@@ -47,19 +47,19 @@ def test_category_missing():
 
 
 def test_category_stored_missing():
-    rC = receiptCollection()
+    rC = ReceiptCollection()
     rC.checkCategory('Testcategory', 'Testitem')
     assert rC.unsane_categories[0] == ('Testitem', 'Testcategory', '')
 
 
 def test_category_both_missing():
-    rC = receiptCollection()
+    rC = ReceiptCollection()
     rC.checkCategory('', 'Testitem')
     assert not rC.unsane_categories
 
 
 def test_create_ledger():
-    rc = receiptCollection()
+    rc = ReceiptCollection()
     Position = namedtuple('item', ['name',
                                    'category',
                                    'price',

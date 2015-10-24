@@ -5,15 +5,15 @@ Created on Nov 30, 2014
 @author: Michael Große <mic.grosse@posteo.de>
 '''
 import csv
-from receipteval.receiptCollection import receiptCollection
+from receipteval.receiptCollection import ReceiptCollection
 from receipteval.purchase import Purchase
 from receipteval.item_cat_dict import ItemCategoryDict
 from receipteval.helper import validate_date
 
 
-class parser(object):
+class Parser(object):
     '''
-    classdocs
+    Parse csv file with receipts.
     '''
 
     def __init__(self, *args, **kwargs):
@@ -23,7 +23,7 @@ class parser(object):
         self.dictionary = kwargs.get('category_dictionary', ItemCategoryDict())
         self.purchaseIsActive = None
         self.activePurchase = None
-        self.rc = receiptCollection()
+        self.rc = ReceiptCollection()
 
     def __enter__(self):
         return self

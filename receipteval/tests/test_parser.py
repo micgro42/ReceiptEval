@@ -6,7 +6,7 @@ Created on Nov 30, 2014
 '''
 import pytest
 import os
-from receipteval.parser import parser
+from receipteval.parser import Parser
 from receipteval.item_cat_dict import ItemCategoryDict
 
 
@@ -47,7 +47,7 @@ def teardown_factory_file():
 def test_readfile(factory_file):
     empty_dict = ItemCategoryDict()
     empty_dict.item_category_dict = {}
-    with parser(category_dictionary=empty_dict) as p:
+    with Parser(category_dictionary=empty_dict) as p:
         rc = p.readFile('receipts_test.csv')
     assert rc.purchases[0].date == '2015-11-29'
     assert rc.purchases[0].shop == 'Bio Company'
@@ -68,7 +68,7 @@ def test_readfile(factory_file):
 def test_categories(factory_file):
     empty_dict = ItemCategoryDict()
     empty_dict.item_category_dict = {}
-    with parser(category_dictionary=empty_dict) as p:
+    with Parser(category_dictionary=empty_dict) as p:
         rc = p.readFile('receipts_test.csv')
         rc.collectItems()
     assert sorted(['Zubrot',
@@ -83,7 +83,7 @@ def test_categories(factory_file):
 def test_items_in_categories(factory_file):
     empty_dict = ItemCategoryDict()
     empty_dict.item_category_dict = {}
-    with parser(category_dictionary=empty_dict) as p:
+    with Parser(category_dictionary=empty_dict) as p:
         rc = p.readFile('receipts_test.csv')
     rc.collectItems()
     assert sorted(rc.categories[''][1]) == sorted(['Kakaopulver',
@@ -105,7 +105,7 @@ def test_items_in_categories(factory_file):
 def test_category_prices(factory_file):
     empty_dict = ItemCategoryDict()
     empty_dict.item_category_dict = {}
-    with parser(category_dictionary=empty_dict) as p:
+    with Parser(category_dictionary=empty_dict) as p:
         rc = p.readFile('receipts_test.csv')
     rc.collectItems()
     assert round(rc.categories[''][0], 2) == 30.83
@@ -117,7 +117,7 @@ def test_category_prices(factory_file):
 
 
 def test_unsane_items(factory_file):
-    with parser() as p:
+    with Parser() as p:
         rc = p.readFile('receipts_test.csv')
     rc.collectItems()
     assert sorted(['Item without Price',
@@ -134,7 +134,7 @@ def test_category_create(factory_file):
 
 
 def test_ledger_only_items(factory_file):
-    with parser() as p:
+    with Parser() as p:
         rc = p.readFile('receipts_test.csv')
     assert not rc.purchases[0].flags['ledger']
     assert not rc.purchases[1].flags['ledger']

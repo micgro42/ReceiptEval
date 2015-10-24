@@ -8,9 +8,9 @@ from collections import defaultdict
 from receipteval.item_cat_dict import ItemCategoryDict
 
 
-class receiptCollection(object):
+class ReceiptCollection(object):
     '''
-    classdocs
+    Collection of purchases with evaluation and output options.
     '''
 
     def __init__(self):

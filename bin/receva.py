@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # encoding: utf-8
 import argparse
-from receipteval.parser import parser as recevap
+from receipteval.parser import Parser as ReceiptParser
 from receipteval.item_cat_dict import ItemCategoryDict
 from receipteval.helper import simplify_category
 
@@ -37,7 +37,7 @@ if args.categories_file:
     cat_dict = ItemCategoryDict(path=args.categories_file)
     parser_args['category_dictionary'] = cat_dict
 
-with recevap(**parser_args) as p:
+with ReceiptParser(**parser_args) as p:
     rc = p.readFile(args.receipts_file)
 
 rc.collectItems()
