@@ -19,6 +19,10 @@ Code Climate
 * [![Code Climate](https://codeclimate.com/github/micgro42/ReceiptEval/badges/gpa.svg)](https://codeclimate.com/github/micgro42/ReceiptEval)
 * [![Test Coverage](https://codeclimate.com/github/micgro42/ReceiptEval/badges/coverage.svg)](https://codeclimate.com/github/micgro42/ReceiptEval/coverage)
 
+Python Anit-Patterns
+--------------------
+[![Code Issues](https://www.quantifiedcode.com/api/v1/project/dfe2e3a51c5b427b8617b3a59ddf406f/badge.svg)](https://www.quantifiedcode.com/app/project/dfe2e3a51c5b427b8617b3a59ddf406f)
+
 Installation
 ============
 
