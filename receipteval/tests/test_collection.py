@@ -72,7 +72,7 @@ def test_create_ledger():
                                               '',
                                               ''))
     rc.purchases.append(testPurchaseOne)
-    testPurchaseTwo = Purchase('2015-11-29',
+    testPurchaseTwo = Purchase('2015-11-28',
                                "TestShopTwo",
                                payment_method="Giro")
     testPurchaseTwo.positions.append(Position('bar',
@@ -86,12 +86,32 @@ def test_create_ledger():
                                               '2',
                                               ''))
     rc.purchases.append(testPurchaseTwo)
+    testPurchaseThree = Purchase('2015-11-30',
+                                 "TestShopThree",
+                                 payment_method="Giro")
+    testPurchaseThree.positions.append(Position('bar',
+                                                'category:subcategory2',
+                                                4.56,
+                                                '',
+                                                ''))
+    testPurchaseThree.positions.append(Position('foo',
+                                                'category:subcategory1',
+                                                2.46,
+                                                '2',
+                                                ''))
+    rc.purchases.append(testPurchaseThree)
+
     actual_output = rc.getLedger()
-    expected_output = "2015-11-29 TestShopOne\n"
+    expected_output = "2015-11-28 TestShopTwo\n"
+    expected_output += "  Aktiva:Giro  -7.02\n"
+    expected_output += "  category:subcategory2  4.56\n"
+    expected_output += "  category:subcategory1  2.46\n"
+    expected_output += "\n"
+    expected_output += "2015-11-29 TestShopOne\n"
     expected_output += "  Aktiva:Portmonaie  -1.23\n"
     expected_output += "  category:subcategory1  1.23\n"
     expected_output += "\n"
-    expected_output += "2015-11-29 TestShopTwo\n"
+    expected_output += "2015-11-30 TestShopThree\n"
     expected_output += "  Aktiva:Giro  -7.02\n"
     expected_output += "  category:subcategory2  4.56\n"
     expected_output += "  category:subcategory1  2.46\n"

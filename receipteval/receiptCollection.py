@@ -56,7 +56,7 @@ class receiptCollection(object):
 
     def getLedger(self, date = '1900-01-01'):
         ledger_output = ""
-        for receipt in sorted(self.purchases, key=lambda t: t._date):
+        for receipt in sorted(self.purchases, key=lambda t: t.date):
             if receipt.date >= date:
                 ledger_output += receipt.getLedger()
         return ledger_output
