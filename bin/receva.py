@@ -38,9 +38,9 @@ if args.categories_file:
     parser_args['category_dictionary'] = cat_dict
 
 with ReceiptParser(**parser_args) as p:
-    rc = p.readFile(args.receipts_file)
+    rc = p.read_file(args.receipts_file)
 
-rc.collectItems()
+rc.collect_items()
 
 if args.categories:
     for key in rc.categories:
@@ -61,9 +61,9 @@ elif args.check_categories:
     for (item, inputCategory, storedCategory) in rc.unsane_categories:
         print item + " " + inputCategory + " " + storedCategory
 elif args.update_categories:
-    rc.categoryDict.updateCatFile(args.receipts_file, args.categories_file)
+    receipt_collection.category_dict.update_cat_file(args.receipts_file, args.categories_file)
 elif args.ledger:
-    ledger = rc.getLedger(args.date)
+    ledger = rc.get_ledger(args.date)
     print ledger
 else:
     for key in rc.categories:

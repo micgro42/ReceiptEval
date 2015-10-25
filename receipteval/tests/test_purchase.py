@@ -32,12 +32,12 @@ def test_purchase():
                   'Aldi',
                   payment_method='cash',
                   category_dict=cat_dict) as purchase:
-        purchase.addItem('Cola Zero', 0.39, 1, weight='1.5l')
-        purchase.addItem('Pfand', 0.25, 1)
-        purchase.addItem('Mandelhörnchen', 1.59, 1)
-        purchase.addItem('Kaffeegetränk', 0.49, 1, weight='0.25l')
-        purchase.addItem('Schokolade Edelbitter', 1.09, 1)
-        purchase.addItem('Schokolade Erdbeere Joghurt Crisp',
+        purchase.add_item('Cola Zero', 0.39, 1, weight='1.5l')
+        purchase.add_item('Pfand', 0.25, 1)
+        purchase.add_item('Mandelhörnchen', 1.59, 1)
+        purchase.add_item('Kaffeegetränk', 0.49, 1, weight='0.25l')
+        purchase.add_item('Schokolade Edelbitter', 1.09, 1)
+        purchase.add_item('Schokolade Erdbeere Joghurt Crisp',
                          1.19,
                          1,
                          weight='200g')
@@ -53,9 +53,9 @@ def test_purchase_ledger():
                   'Testgeschäft',
                   payment_method='cash',
                   category_dict=cat_dict) as purchase:
-        purchase.addItem('Cola', 0.39, 1, weight='1.5l')
-        purchase.addItem('Pfand', 0.25, 1)
-    actual_output = purchase.getLedger()
+        purchase.add_item('Cola', 0.39, 1, weight='1.5l')
+        purchase.add_item('Pfand', 0.25, 1)
+    actual_output = purchase.get_ledger()
     expected_output = "2015-05-21 Testgeschäft\n"
     expected_output += "  Aktiva:Portmonaie  -0.64\n"
     expected_output += "  Ausgaben:Konsum:Cola  0.39\n"
@@ -73,8 +73,8 @@ def test_purchase_ledger_only():
                   payment_method='Giro',
                   category_dict=cat_dict,
                   flags='L') as purchase:
-        purchase.addItem('Auszahlung', 100, 1, category='Aktiva:Portmonaie')
-    actual_output = purchase.getLedger()
+        purchase.add_item('Auszahlung', 100, 1, category='Aktiva:Portmonaie')
+    actual_output = purchase.get_ledger()
     expected_output = "2015-05-21 Übertrag\n"
     expected_output += "  Aktiva:Giro  -100.0\n"
     expected_output += "  Aktiva:Portmonaie  100.0\n"

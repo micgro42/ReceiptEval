@@ -25,7 +25,7 @@ class Test(unittest.TestCase):
                                             'Heumilch': 'Milch',
                                             'Milch': 'Milch',
                                             }
-        cat_milch = category_dict.getCategory('Milch')
+        cat_milch = category_dict.get_category('Milch')
         assert cat_milch == 'Milch'
 
 

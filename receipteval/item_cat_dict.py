@@ -12,7 +12,6 @@ from collections import OrderedDict
 class ItemCategoryDict(object):
     """
     Set the category for every item
-
     """
 
     def __init__(self, **kwargs):
@@ -28,6 +27,9 @@ class ItemCategoryDict(object):
             pass
 
     def read_categories(self, file_path):
+        '''
+        Read existing categories file
+        '''
         if os.path.isfile(file_path):
             with open(file_path, 'r') as category_file:
                 csv_reader = csv.reader(category_file)
@@ -42,7 +44,7 @@ class ItemCategoryDict(object):
                     except IndexError:
                         continue
 
-    def getCategory(self, item):
+    def get_category(self, item):
         """Return the category of an item
 
         :param item: name of item
@@ -50,13 +52,21 @@ class ItemCategoryDict(object):
         """
         return self.item_category_dict.get(item, '')
 
-    def updateCatFile(self, receipt_path, category_path=None):
+    def update_cat_file(self, receipt_path, category_path=None):
+        '''
+        update an existing categories file or create a new one
+
+        :param receipt_path: name of receipt collection file
+        :type receipt_path: string
+        :param category_path: name of categpry file to be updated
+        :type category_path: string
+        '''
         if category_path and os.path.isfile(category_path):
             self.item_category_dict = {}
             self.read_categories(category_path)
         else:
             category_path = 'new_dict.csv'
-        self.extractNew(receipt_path)
+        self.extract_new_categories(receipt_path)
         with open(category_path, 'w') as category_file:
             csv_writer = csv.writer(category_file, lineterminator='\n')
             ordered_categories = OrderedDict(sorted(self.item_category_dict.items(), key=lambda t: (t[1], t[0])))
@@ -67,19 +77,20 @@ class ItemCategoryDict(object):
                     comment = ""
                 csv_writer.writerow([key, value, comment])
 
-    def extractNew(self, file_path):
-        """ Create new categories file from receipt collection
+    def extract_new_categories(self, file_path):
+        '''
+        Extract categories not yet in the categories file
 
         :param file_path: name of receipt collection file
         :type file_path: string
-        """
+        '''
         if os.path.isfile(file_path):
             with open(file_path, 'r') as receipt_file:
                 csv_reader = csv.reader(receipt_file)
-                firstRow = True
+                first_row = True
                 for rows in csv_reader:
-                    if firstRow:
-                        firstRow = False
+                    if first_row:
+                        first_row = False
                         continue
                     if not rows[2]:
                         continue
@@ -89,6 +100,6 @@ class ItemCategoryDict(object):
                         self.item_category_dict[rows[2].strip()] = rows[4].strip()
                         continue
                     if self.item_category_dict[rows[2].strip()] != rows[4].strip():
-                        print (rows[2].strip() + " has two different categories: "
-                               + rows[4].strip() + " and "
-                               + self.item_category_dict[rows[2].strip()], file=sys.stderr)
+                        print (rows[2].strip() + " has two different categories: " +
+                               rows[4].strip() + " and " +
+                               self.item_category_dict[rows[2].strip()], file=sys.stderr)

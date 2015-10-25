@@ -12,13 +12,10 @@ from receipteval.helper import validate_date
 
 class Purchase(object):
     '''
-    classdocs
+    Hold the information of one receipt
     '''
 
     def __init__(self, date, shop, **kwargs):
-        '''
-        Constructor
-        '''
         self._date = None
         self.date = date
         self.shop = shop
@@ -27,7 +24,7 @@ class Purchase(object):
         self.category_dict = kwargs.get('category_dict', ItemCategoryDict())
         self._total = 0.0
         self.flags = {}
-        self.extractFlags(kwargs.get('flags', ''))
+        self.extract_flags(kwargs.get('flags', ''))
 
     def __enter__(self):
         return self
@@ -35,7 +32,11 @@ class Purchase(object):
     def __exit__(self, exception_type, exception_value, traceback):
         pass
 
-    def extractFlags(self, flags):
+    def extract_flags(self, flags):
+        '''
+        Parse the flags for the purchase
+        @todo: This should use binary flags
+        '''
         if flags is 'L':
             self.flags['ledger'] = True
         else:
@@ -43,6 +44,9 @@ class Purchase(object):
 
     @property
     def positions(self):
+        '''
+        If this is a ledger-only purchase, return nothing
+        '''
         if not self.flags['ledger']:
             return self._positions
         else:
@@ -67,11 +71,14 @@ class Purchase(object):
     def date(self, value):
         self._date = validate_date(value)
 
-    def addItem(self, name, price, count, **kwargs):
-        Item = namedtuple('item', ['name', 'category', 'price', 'count', 'weight'])
+    def add_item(self, name, price, count, **kwargs):
+        '''
+        Add a position to the purchase.
+        '''
+        item = namedtuple('item', ['name', 'category', 'price', 'count', 'weight'])
         weight = kwargs.get('weight', '')
         category = kwargs.get('category', '')
-        stored_category = self.category_dict.getCategory(name)
+        stored_category = self.category_dict.get_category(name)
         if category is '' and stored_category is not '':
             category = stored_category
         try:
@@ -80,21 +87,21 @@ class Purchase(object):
             print ('Price: ' + price)
             print ('Name: ' + name)
             raise
-        self.positions = Item(name, category, price, count, weight)
+        self.positions = item(name, category, price, count, weight)
 
-    def getLedger(self):
-        ledgerString = ""
-        ledgerString += self.date + " " + self.shop + "\n"
+    def get_ledger(self):
+        '''
+        Return this purchase in the format used for github.com/ledger/ledger
+        '''
+        ledger_string = ""
+        ledger_string += self.date + " " + self.shop + "\n"
         if self.payment_method == "Giro":
-            ledgerString += "  Aktiva:Giro  " + str(-self.total) + "\n"
+            ledger_string += "  Aktiva:Giro  " + str(-self.total) + "\n"
         elif self.payment_method == "cash":
-            ledgerString += "  Aktiva:Portmonaie  " + str(-self.total) + "\n"
+            ledger_string += "  Aktiva:Portmonaie  " + str(-self.total) + "\n"
         else:
-            ledgerString += "  " + self.payment_method + "  " + str(-self.total) + "\n"
+            ledger_string += "  " + self.payment_method + "  " + str(-self.total) + "\n"
         for position in self._positions:
-            ledgerString += "  " + position.category + "  " + str(position.price) + "\n"
-        ledgerString += "\n"
-        return ledgerString
-
-    def printLegacy(self):
-        pass
+            ledger_string += "  " + position.category + "  " + str(position.price) + "\n"
+        ledger_string += "\n"
+        return ledger_string

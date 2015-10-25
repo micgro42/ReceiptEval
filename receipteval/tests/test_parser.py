@@ -48,7 +48,7 @@ def test_readfile(factory_file):
     empty_dict = ItemCategoryDict()
     empty_dict.item_category_dict = {}
     with Parser(category_dictionary=empty_dict) as p:
-        rc = p.readFile('receipts_test.csv')
+        rc = p.read_file('receipts_test.csv')
     assert rc.purchases[0].date == '2015-11-29'
     assert rc.purchases[0].shop == 'Bio Company'
     assert rc.purchases[0].payment_method == 'cash'
@@ -69,23 +69,23 @@ def test_categories(factory_file):
     empty_dict = ItemCategoryDict()
     empty_dict.item_category_dict = {}
     with Parser(category_dictionary=empty_dict) as p:
-        rc = p.readFile('receipts_test.csv')
-        rc.collectItems()
+        receipt_collection = p.read_file('receipts_test.csv')
+        receipt_collection.collect_items()
     assert sorted(['Zubrot',
                    '',
                    'Mehl',
                    'Kochzutaten',
                    'Obst',
                    'Gewürze'
-                   ]) == sorted(rc.categories.keys())
+                   ]) == sorted(receipt_collection.categories.keys())
 
 
 def test_items_in_categories(factory_file):
     empty_dict = ItemCategoryDict()
     empty_dict.item_category_dict = {}
     with Parser(category_dictionary=empty_dict) as p:
-        rc = p.readFile('receipts_test.csv')
-    rc.collectItems()
+        rc = p.read_file('receipts_test.csv')
+    rc.collect_items()
     assert sorted(rc.categories[''][1]) == sorted(['Kakaopulver',
                                                    'Seidentofu',
                                                    'Sesam',
@@ -106,8 +106,8 @@ def test_category_prices(factory_file):
     empty_dict = ItemCategoryDict()
     empty_dict.item_category_dict = {}
     with Parser(category_dictionary=empty_dict) as p:
-        rc = p.readFile('receipts_test.csv')
-    rc.collectItems()
+        rc = p.read_file('receipts_test.csv')
+    rc.collect_items()
     assert round(rc.categories[''][0], 2) == 30.83
     assert round(rc.categories['Zubrot'][0], 2) == 1.69
     assert round(rc.categories['Mehl'][0], 2) == 3.98
@@ -118,8 +118,8 @@ def test_category_prices(factory_file):
 
 def test_unsane_items(factory_file):
     with Parser() as p:
-        rc = p.readFile('receipts_test.csv')
-    rc.collectItems()
+        rc = p.read_file('receipts_test.csv')
+    rc.collect_items()
     assert sorted(['Item without Price',
                    'Roggenmehl']) == sorted(rc.unsane_items)
 
@@ -127,7 +127,7 @@ def test_unsane_items(factory_file):
 def test_category_create(factory_file):
     category_dict = ItemCategoryDict()
     category_dict.item_category_dict = {}
-    category_dict.extractNew('receipts_test.csv')
+    category_dict.extract_new_categories('receipts_test.csv')
     assert '' not in category_dict.item_category_dict
     assert 'Bio Company' not in category_dict.item_category_dict
     assert category_dict.item_category_dict['Blanc de Pomm'] == 'Zubrot'
@@ -135,7 +135,7 @@ def test_category_create(factory_file):
 
 def test_ledger_only_items(factory_file):
     with Parser() as p:
-        rc = p.readFile('receipts_test.csv')
+        rc = p.read_file('receipts_test.csv')
     assert not rc.purchases[0].flags['ledger']
     assert not rc.purchases[1].flags['ledger']
     assert rc.purchases[2].flags['ledger']

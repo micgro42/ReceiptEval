@@ -5,61 +5,61 @@ Created on Apr 19, 2015
 @author: Michael Große <mic.grosse@posteo.de>
 '''
 
-from receipteval.receiptCollection import ReceiptCollection
+from receipteval.receipt_collection import ReceiptCollection
 from receipteval.purchase import Purchase
 from collections import namedtuple
 
 
 def test_category_correct():
     rC = ReceiptCollection()
-    rC.categoryDict.item_category_dict = {'Pfand': 'Pfand',
-                                          'Pesto': 'Pesto',
-                                          'Parmesan': 'Käse',
-                                          'Heumilch': 'Milch',
-                                          'Milch': 'Milch',
+    rC.category_dict.item_category_dict = {'Pfand': 'Pfand',
+                                           'Pesto': 'Pesto',
+                                           'Parmesan': 'Käse',
+                                           'Heumilch': 'Milch',
+                                           'Milch': 'Milch',
                                           }
-    rC.checkCategory('Milch', 'Heumilch')
+    rC.check_category('Milch', 'Heumilch')
     assert not rC.unsane_categories
 
 
 def test_category_wrong():
     rC = ReceiptCollection()
-    rC.categoryDict.item_category_dict = {'Pfand': 'Pfand',
-                                          'Pesto': 'Pesto',
-                                          'Parmesan': 'Käse',
-                                          'Heumilch': 'Milch',
-                                          'Milch': 'Milch',
+    rC.category_dict.item_category_dict = {'Pfand': 'Pfand',
+                                           'Pesto': 'Pesto',
+                                           'Parmesan': 'Käse',
+                                           'Heumilch': 'Milch',
+                                           'Milch': 'Milch',
                                           }
-    rC.checkCategory('Obst', 'Heumilch')
+    rC.check_category('Obst', 'Heumilch')
     assert rC.unsane_categories[0] == ('Heumilch', 'Obst', 'Milch')
 
 
 def test_category_missing():
     rC = ReceiptCollection()
-    rC.categoryDict.item_category_dict = {'Pfand': 'Pfand',
-                                          'Pesto': 'Pesto',
-                                          'Parmesan': 'Käse',
-                                          'Heumilch': 'Milch',
-                                          'Milch': 'Milch',
+    rC.category_dict.item_category_dict = {'Pfand': 'Pfand',
+                                           'Pesto': 'Pesto',
+                                           'Parmesan': 'Käse',
+                                           'Heumilch': 'Milch',
+                                           'Milch': 'Milch',
                                           }
-    rC.checkCategory('', 'Heumilch')
+    rC.check_category('', 'Heumilch')
     assert rC.unsane_categories[0] == ('Heumilch', '', 'Milch')
 
 
 def test_category_stored_missing():
     rC = ReceiptCollection()
-    rC.checkCategory('Testcategory', 'Testitem')
+    rC.check_category('Testcategory', 'Testitem')
     assert rC.unsane_categories[0] == ('Testitem', 'Testcategory', '')
 
 
 def test_category_both_missing():
     rC = ReceiptCollection()
-    rC.checkCategory('', 'Testitem')
+    rC.check_category('', 'Testitem')
     assert not rC.unsane_categories
 
 
 def test_create_ledger():
-    rc = ReceiptCollection()
+    receipt_collection = ReceiptCollection()
     Position = namedtuple('item', ['name',
                                    'category',
                                    'price',
@@ -71,7 +71,7 @@ def test_create_ledger():
                                               1.23,
                                               '',
                                               ''))
-    rc.purchases.append(testPurchaseOne)
+    receipt_collection.purchases.append(testPurchaseOne)
     testPurchaseTwo = Purchase('2015-11-28',
                                "TestShopTwo",
                                payment_method="Giro")
@@ -85,7 +85,7 @@ def test_create_ledger():
                                               2.46,
                                               '2',
                                               ''))
-    rc.purchases.append(testPurchaseTwo)
+    receipt_collection.purchases.append(testPurchaseTwo)
     testPurchaseThree = Purchase('2015-11-30',
                                  "TestShopThree",
                                  payment_method="Giro")
@@ -99,9 +99,9 @@ def test_create_ledger():
                                                 2.46,
                                                 '2',
                                                 ''))
-    rc.purchases.append(testPurchaseThree)
+    receipt_collection.purchases.append(testPurchaseThree)
 
-    actual_output = rc.getLedger()
+    actual_output = receipt_collection.get_ledger()
     expected_output = "2015-11-28 TestShopTwo\n"
     expected_output += "  Aktiva:Giro  -7.02\n"
     expected_output += "  category:subcategory2  4.56\n"
