@@ -8,6 +8,7 @@ import pytest
 import os
 from receipteval.parser import Parser
 from receipteval.item_cat_dict import ItemCategoryDict
+from receipteval.receipt_collection import ReceiptCollection
 
 
 @pytest.fixture()  # Registering this function as a fixture.
@@ -48,28 +49,29 @@ def test_readfile(factory_file):
     empty_dict = ItemCategoryDict()
     empty_dict.item_category_dict = {}
     with Parser(category_dictionary=empty_dict) as p:
-        rc = p.read_file('receipts_test.csv')
-    assert rc.purchases[0].date == '2015-11-29'
-    assert rc.purchases[0].shop == 'Bio Company'
-    assert rc.purchases[0].payment_method == 'cash'
-    assert rc.purchases[0].positions[0].name == 'Blanc de Pomm'
-    assert rc.purchases[0].positions[0].price == 1.69
-    assert rc.purchases[0].positions[0].count == "1"
-    assert rc.purchases[0].positions[0].category == 'Zubrot'
-    assert rc.purchases[0].positions[1].name == 'Seidentofu'
-    assert rc.purchases[0].positions[1].price == 5.18
-    assert rc.purchases[0].positions[1].count == "2"
-    assert rc.purchases[0].positions[1].category == ''
-    assert rc.purchases[1].date == '2014-11-01'
-    assert rc.purchases[1].shop == 'Bio Company'
-    assert rc.purchases[1].payment_method == 'Giro'
+        purchases = p.read_file('receipts_test.csv')
+    assert purchases[0].date == '2015-11-29'
+    assert purchases[0].shop == 'Bio Company'
+    assert purchases[0].payment_method == 'cash'
+    assert purchases[0].positions[0].name == 'Blanc de Pomm'
+    assert purchases[0].positions[0].price == 1.69
+    assert purchases[0].positions[0].count == "1"
+    assert purchases[0].positions[0].category == 'Zubrot'
+    assert purchases[0].positions[1].name == 'Seidentofu'
+    assert purchases[0].positions[1].price == 5.18
+    assert purchases[0].positions[1].count == "2"
+    assert purchases[0].positions[1].category == ''
+    assert purchases[1].date == '2014-11-01'
+    assert purchases[1].shop == 'Bio Company'
+    assert purchases[1].payment_method == 'Giro'
 
 
 def test_categories(factory_file):
     empty_dict = ItemCategoryDict()
     empty_dict.item_category_dict = {}
     with Parser(category_dictionary=empty_dict) as p:
-        receipt_collection = p.read_file('receipts_test.csv')
+        purchases = p.read_file('receipts_test.csv')
+        receipt_collection = ReceiptCollection(purchases)
         receipt_collection.collect_items()
     assert sorted(['Zubrot',
                    '',
@@ -84,7 +86,8 @@ def test_items_in_categories(factory_file):
     empty_dict = ItemCategoryDict()
     empty_dict.item_category_dict = {}
     with Parser(category_dictionary=empty_dict) as p:
-        rc = p.read_file('receipts_test.csv')
+        purchases = p.read_file('receipts_test.csv')
+    rc = ReceiptCollection(purchases)
     rc.collect_items()
     assert sorted(rc.categories[''][1]) == sorted(['Kakaopulver',
                                                    'Seidentofu',
@@ -106,7 +109,8 @@ def test_category_prices(factory_file):
     empty_dict = ItemCategoryDict()
     empty_dict.item_category_dict = {}
     with Parser(category_dictionary=empty_dict) as p:
-        rc = p.read_file('receipts_test.csv')
+        purchases = p.read_file('receipts_test.csv')
+    rc = ReceiptCollection(purchases)
     rc.collect_items()
     assert round(rc.categories[''][0], 2) == 30.83
     assert round(rc.categories['Zubrot'][0], 2) == 1.69
@@ -118,7 +122,8 @@ def test_category_prices(factory_file):
 
 def test_unsane_items(factory_file):
     with Parser() as p:
-        rc = p.read_file('receipts_test.csv')
+        purchases = p.read_file('receipts_test.csv')
+    rc = ReceiptCollection(purchases)
     rc.collect_items()
     assert sorted(['Item without Price',
                    'Roggenmehl']) == sorted(rc.unsane_items)
@@ -135,7 +140,7 @@ def test_category_create(factory_file):
 
 def test_ledger_only_items(factory_file):
     with Parser() as p:
-        rc = p.read_file('receipts_test.csv')
-    assert not rc.purchases[0].flags['ledger']
-    assert not rc.purchases[1].flags['ledger']
-    assert rc.purchases[2].flags['ledger']
+        purchases = p.read_file('receipts_test.csv')
+    assert not purchases[0].flags['ledger']
+    assert not purchases[1].flags['ledger']
+    assert purchases[2].flags['ledger']

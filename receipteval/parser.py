@@ -5,7 +5,6 @@ Created on Nov 30, 2014
 @author: Michael Große <mic.grosse@posteo.de>
 '''
 import csv
-from receipteval.receipt_collection import ReceiptCollection
 from receipteval.purchase import Purchase
 from receipteval.item_cat_dict import ItemCategoryDict
 from receipteval.helper import validate_date
@@ -20,7 +19,7 @@ class Parser(object):
         self.dictionary = kwargs.get('category_dictionary', ItemCategoryDict())
         self.purchase_is_active = None
         self.active_purchase = None
-        self.receipt_collection = ReceiptCollection()
+        self.purchases = []
 
     def __enter__(self):
         return self
@@ -44,7 +43,7 @@ class Parser(object):
                 else:
                     self.handle_in_purchase_line(line)
         self.clean_up()
-        return self.receipt_collection
+        return self.purchases
 
     @staticmethod
     def check_line_empty_enough(line):
@@ -94,13 +93,14 @@ class Parser(object):
         a valid position.
         '''
         if self.check_line_empty_enough(line):
-            self.receipt_collection.purchases.append(self.active_purchase)
+            self.purchases.append(self.active_purchase)
             self.active_purchase = None
             return
         if line[0] is not '' or line[2] is '':
             raise RuntimeError('file badly formatted: ' + str(line))
-        if line[3] is '':
-            self.receipt_collection.unsane_items.append(line[2])
+        # if line[3] is '':
+        #     warning('price missing ' + line[2])
+        #     @TODO: decide if we should handle a missing price in the parser
         else:
             self.active_purchase.add_item(name=line[2],
                                           price=line[3],
@@ -109,5 +109,5 @@ class Parser(object):
 
     def clean_up(self):
         if self.active_purchase is not None:
-            self.receipt_collection.purchases.append(self.active_purchase)
+            self.purchases.append(self.active_purchase)
             self.active_purchase = None

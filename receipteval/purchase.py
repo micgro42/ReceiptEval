@@ -5,6 +5,7 @@ Created on May 10, 2015
 @author: Michael Große <mic.grosse@posteo.de>
 '''
 from __future__ import print_function
+from logging import warning
 from collections import namedtuple
 from receipteval.item_cat_dict import ItemCategoryDict
 from receipteval.helper import validate_date
@@ -25,6 +26,7 @@ class Purchase(object):
         self._total = 0.0
         self.flags = {}
         self.extract_flags(kwargs.get('flags', ''))
+        self.unsane_items = []
 
     def __enter__(self):
         return self
@@ -84,10 +86,12 @@ class Purchase(object):
         try:
             price = float(price)
         except ValueError:
-            print ('Price: ' + price)
-            print ('Name: ' + name)
-            raise
-        self.positions = item(name, category, price, count, weight)
+            warning('price missing ' + name)
+            if (price is not ''):
+                raise
+            self.unsane_items.append(name)
+        else:
+            self.positions = item(name, category, price, count, weight)
 
     def get_ledger(self):
         '''

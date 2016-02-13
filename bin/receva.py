@@ -4,6 +4,7 @@ import argparse
 from receipteval.parser import Parser as ReceiptParser
 from receipteval.item_cat_dict import ItemCategoryDict
 from receipteval.helper import simplify_category
+from receipteval.receipt_collection import ReceiptCollection
 
 script_description = ('Evaluate receipts stored as .csv')
 parser = argparse.ArgumentParser(description=script_description)
@@ -38,8 +39,8 @@ if args.categories_file:
     parser_args['category_dictionary'] = cat_dict
 
 with ReceiptParser(**parser_args) as p:
-    rc = p.read_file(args.receipts_file)
-
+    purchases = p.read_file(args.receipts_file)
+rc = ReceiptCollection(purchases)
 rc.collect_items()
 
 if args.categories:

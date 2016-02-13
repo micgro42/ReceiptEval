@@ -13,9 +13,9 @@ class ReceiptCollection(object):
     Collection of purchases with evaluation and output options.
     '''
 
-    def __init__(self):
+    def __init__(self, purchases=[]):
         self.categories = defaultdict(lambda: [0.0, set()])
-        self.purchases = []
+        self.purchases = purchases
         self.unsane_items = []
         self.unsane_categories = []
         self.category_dict = ItemCategoryDict()
@@ -27,6 +27,7 @@ class ReceiptCollection(object):
         respective categories
         '''
         for purchase in self.purchases:
+            self.unsane_items.extend(purchase.unsane_items)
             for item in purchase.positions:
                 self.categories[item.category][1].add(item.name)
                 self.categories[item.category][0] += item.price
