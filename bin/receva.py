@@ -62,7 +62,7 @@ elif args.check_categories:
     for (item, inputCategory, storedCategory) in rc.unsane_categories:
         print item + " " + inputCategory + " " + storedCategory
 elif args.update_categories:
-    receipt_collection.category_dict.update_cat_file(args.receipts_file, args.categories_file)
+    rc.category_dict.update_cat_file(args.receipts_file, args.categories_file)
 elif args.ledger:
     ledger = rc.get_ledger(args.date)
     print ledger
