@@ -16,6 +16,29 @@ class Purchase(object):
     Hold the information of one receipt
     '''
 
+    def __eq__(self, other):
+        equal = isinstance(other, self.__class__)
+        equal = equal and self.shop == other.shop
+        equal = equal and self.date == other.date
+        equal = equal and self.payment_method == other.payment_method
+        equal = equal and self.flags == other.flags
+        if self._positions != other._positions:
+            equal = False
+            print(self._positions)
+            print(other._positions)
+        return equal
+
+    def __ne__(self, other):
+        return not self.__eq__(other)
+
+    def __str__(self, *args, **kwargs):
+        string = self.date + " " + self.shop + " " + self.payment_method + "\n"
+        string += self.flags + "\n"
+        for p in self._positions:
+            string += p.count + " " + p.name + " " + p.price + " "
+            string += p.category + " " + p.weight + "\n"
+        return string
+
     def __init__(self, date, shop, **kwargs):
         self._date = None
         self.date = date
