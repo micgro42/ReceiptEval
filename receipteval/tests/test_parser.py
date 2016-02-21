@@ -4,11 +4,12 @@ Created on Nov 30, 2014
 
 @author: Michael Große <mic.grosse@posteo.de>
 '''
+
 import pytest
 import os
 from receipteval.parser import Parser
 from receipteval.item_cat_dict import ItemCategoryDict
-from receipteval.receipt_collection import ReceiptCollection
+from receipteval.purchase import Purchase
 
 
 @pytest.fixture()  # Registering this function as a fixture.
@@ -66,67 +67,44 @@ def test_readfile(factory_file):
     assert purchases[1].payment_method == 'Giro'
 
 
-def test_categories(factory_file):
-    empty_dict = ItemCategoryDict()
-    empty_dict.item_category_dict = {}
-    with Parser(category_dictionary=empty_dict) as p:
-        purchases = p.read_file('receipts_test.csv')
-        receipt_collection = ReceiptCollection(purchases)
-        receipt_collection.collect_items()
-    assert sorted(['Zubrot',
-                   '',
-                   'Mehl',
-                   'Kochzutaten',
-                   'Obst',
-                   'Gewürze'
-                   ]) == sorted(receipt_collection.categories.keys())
+def test_parse_multiple_purchases(factory_file):
+    expected_purchases = []
+    expected_purchase1 = Purchase('2015-11-29', 'Bio Company')
+    expected_purchase1.add_item(name='Blanc de Pomm',
+                                price=1.69,
+                                count=1,
+                                category='Zubrot')
+    expected_purchase1.add_item('Seidentofu', 5.18, 2)
+    expected_purchases.append(expected_purchase1)
 
+    expected_purchase2 = Purchase('2014-11-01', 'Bio Company',
+                                  payment_method='Giro')
+    expected_purchase2.add_item('Risotto', 4.38, 2, category='Kochzutaten')
+    expected_purchase2.add_item('Sesam', 3.69, 1)
+    expected_purchase2.add_item('Cashewbruch', 10.99, 1)
+    expected_purchase2.add_item('Bananen', 1.22, 1, category='Obst')
+    expected_purchase2.add_item('Roggenmehl', 3.98, 2, category='Mehl')
+    expected_purchase2.add_item('Walnusskerne', 3.49, 1)
+    expected_purchase2.add_item('Datteln', 5.29, 1)
+    expected_purchase2.add_item('Safranfäden', 6.29, 1, category='Gewürze')
+    expected_purchase2.add_item('Vanillepulver', 2.49, 1, category='Gewürze')
+    expected_purchase2.add_item('Kakaopulver', 2.19, 1)
+    expected_purchase2.add_item('Basilikum, frisch', 1.99, 1, category='Gewürze')
+    expected_purchase2.add_item('Item without Price', '', 1, category='Mehl')
+    expected_purchase2.add_item('Roggenmehl', 3.98, 2, category='Obst')
+    expected_purchases.append(expected_purchase2)
 
-def test_items_in_categories(factory_file):
-    empty_dict = ItemCategoryDict()
-    empty_dict.item_category_dict = {}
-    with Parser(category_dictionary=empty_dict) as p:
-        purchases = p.read_file('receipts_test.csv')
-    rc = ReceiptCollection(purchases)
-    rc.collect_items()
-    assert sorted(rc.categories[''][1]) == sorted(['Kakaopulver',
-                                                   'Seidentofu',
-                                                   'Sesam',
-                                                   'Cashewbruch',
-                                                   'Datteln',
-                                                   'Walnusskerne'])
-    assert sorted(rc.categories['Zubrot'][1]) == sorted(['Blanc de Pomm'])
-    assert sorted(rc.categories['Gewürze'][1]) == sorted(['Safranfäden',
-                                                          'Vanillepulver',
-                                                          'Basilikum, frisch'])
-    assert sorted(rc.categories['Mehl'][1]) == sorted(['Roggenmehl'])
-    assert sorted(rc.categories['Kochzutaten'][1]) == sorted(['Risotto'])
-    assert sorted(rc.categories['Obst'][1]) == sorted(['Bananen',
-                                                       'Roggenmehl'])
+    expected_purchase3 = Purchase('2015-11-17',
+                                  'Übertrag',
+                                  payment_method='Giro',
+                                  flags='L')
+    expected_purchase3.add_item('Abhebung', 100, 1, category='Aktiva:Portmonaie')
+    expected_purchases.append(expected_purchase3)
 
-
-def test_category_prices(factory_file):
-    empty_dict = ItemCategoryDict()
-    empty_dict.item_category_dict = {}
-    with Parser(category_dictionary=empty_dict) as p:
-        purchases = p.read_file('receipts_test.csv')
-    rc = ReceiptCollection(purchases)
-    rc.collect_items()
-    assert round(rc.categories[''][0], 2) == 30.83
-    assert round(rc.categories['Zubrot'][0], 2) == 1.69
-    assert round(rc.categories['Mehl'][0], 2) == 3.98
-    assert round(rc.categories['Kochzutaten'][0], 2) == 4.38
-    assert round(rc.categories['Obst'][0], 2) == 5.20
-    assert round(rc.categories['Gewürze'][0], 2) == 10.77
-
-
-def test_unsane_items(factory_file):
     with Parser() as p:
-        purchases = p.read_file('receipts_test.csv')
-    rc = ReceiptCollection(purchases)
-    rc.collect_items()
-    assert sorted(['Item without Price',
-                   'Roggenmehl']) == sorted(rc.unsane_items)
+        actual_purchases = p.read_file('receipts_test.csv')
+
+    assert actual_purchases == expected_purchases
 
 
 def test_category_create(factory_file):
