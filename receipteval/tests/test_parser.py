@@ -55,11 +55,11 @@ def test_readfile(factory_file):
     assert purchases[0].payment_method == 'cash'
     assert purchases[0].positions[0].name == 'Blanc de Pomm'
     assert purchases[0].positions[0].price == 1.69
-    assert purchases[0].positions[0].count == "1"
+    assert purchases[0].positions[0].count == 1
     assert purchases[0].positions[0].category == 'Zubrot'
     assert purchases[0].positions[1].name == 'Seidentofu'
     assert purchases[0].positions[1].price == 5.18
-    assert purchases[0].positions[1].count == "2"
+    assert purchases[0].positions[1].count == 2
     assert purchases[0].positions[1].category == ''
     assert purchases[1].date == '2014-11-01'
     assert purchases[1].shop == 'Bio Company'

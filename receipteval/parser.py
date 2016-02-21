@@ -8,6 +8,7 @@ import csv
 from receipteval.purchase import Purchase
 from receipteval.item_cat_dict import ItemCategoryDict
 from receipteval.helper import validate_date
+from logging import warning
 
 
 class Parser(object):
@@ -102,9 +103,16 @@ class Parser(object):
         #     warning('price missing ' + line[2])
         #     @TODO: decide if we should handle a missing price in the parser
         else:
+            try:
+                quantity = int(line[1])
+            except ValueError:
+                if line[1] != '':
+                    warning('quantity must be empty or number: ' + quantity)
+                    raise
+                quantity = 1
             self.active_purchase.add_item(name=line[2],
                                           price=line[3],
-                                          count=line[1],
+                                          count=quantity,
                                           category=line[4])
 
     def clean_up(self):
