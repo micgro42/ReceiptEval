@@ -46,6 +46,7 @@ class sqlite(IStorage):
                 sql = ("CREATE TABLE items ( " +
                        "pk_item_id int PRIMARY KEY," +
                        "name text," +
+                       "EAN int," +
                        "comment text" +
                        " )")
                 c.execute(sql)
@@ -62,7 +63,6 @@ class sqlite(IStorage):
                        "fk_category_id text," +
                        "price money," +
                        "quantity int," +
-                       "EAN int," +
                        "tags text" +
                        " )")
                 c.execute(sql)
