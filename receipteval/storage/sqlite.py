@@ -76,12 +76,76 @@ class sqlite(IStorage):
             sys.exit(1)
 
     def addPurchase(self, purchase):
-        NotImplementedError("Class %s doesn't implement addPurchase()"
-                            % (self.__class__.__name__))
+        if self.getCategory(purchase.payment_method) is None:
+            return False
+        category = purchase.payment_method
+        flags = purchase.flags
+        date = purchase.date
+        shop = purchase.shop
+        positions = purchase._positions # todo: we need the positions even if this is a ledger transaction!
+        sql = ("REPLACE INTO receipts (" +
+               "date, shop, flags, fk_category_id ) VALUES (?, ?, ?, ?)")
+        c = self.conn.cursor()
+        t = (date, shop, flags, category)
+        c.execute(sql, t)
+        # If I replace an new purchase into the database - how do I get its ID?
+        ok = True
+        for position in positions:
+            ok = ok && self.addPosition(position)
 
     def getPurchases(self):
         NotImplementedError("Class %s doesn't implement getPurchases()"
                             % (self.__class__.__name__))
+
+    def addItem(self, item):
+        NotImplementedError("Class %s doesn't implement getPurchases()"
+                            % (self.__class__.__name__))
+
+    def addCategory(self, category):
+        NotImplementedError("Class %s doesn't implement getPurchases()"
+                            % (self.__class__.__name__))
+
+    def getCategory(self, name):
+        c = self.conn.cursor()
+        sql = "SELECT * FROM categories WHERE name = ?"
+        c.execute(sql, name)
+        return c.fetchone()
+
+    def getAllCategories(self):
+        sql = "SELECT * FROM categories"
+        NotImplementedError("Class %s doesn't implement getPurchases()"
+                            % (self.__class__.__name__))
+
+    def addPosition(self, position):
+        NotImplementedError("Class %s doesn't implement getPurchases()"
+                            % (self.__class__.__name__))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
