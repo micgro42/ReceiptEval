@@ -20,7 +20,8 @@ class sqlite(IStorage):
                        "pk_receipt_id int PRIMARY KEY," +
                        "date date," +
                        "shop text," +
-                       "fk_category_id int" +
+                       "flags text," +  # comma separated, suboptimal
+                       "fk_category_id text" +
                        " )")
                 c.execute(sql)
                 c.commit()
@@ -31,8 +32,7 @@ class sqlite(IStorage):
             c.execute("SELECT name FROM sqlite_master WHERE type='table' AND name = ?", ('categories',))
             if c.fetchone() is None:
                 sql = ("CREATE TABLE categories ( " +
-                       "pk_category_id int PRIMARY KEY," +
-                       "name text," +
+                       "name text PRIMARY KEY," +
                        "comment text" +
                        " )")
                 c.execute(sql)
@@ -59,8 +59,8 @@ class sqlite(IStorage):
                 sql = ("CREATE TABLE positions ( " +
                        "fk_receipt_id int," +
                        "fk_item_id int," +
-                       "fk_category_id int," +
-                       "price money,"
+                       "fk_category_id text," +
+                       "price money," +
                        "quantity int," +
                        "EAN int," +
                        "tags text" +
