@@ -12,8 +12,8 @@ class sqlite(IStorage):
 
     def __init__(self, dbpath='db.sqlite'):
         try:
-            conn = sqlite3.connect(dbpath)
-            c = conn.cursor()
+            self.conn = sqlite3.connect(dbpath)
+            c = self.conn.cursor()
             c.execute("SELECT name FROM sqlite_master WHERE type='table' AND name = ?", ('receipts',))
             if c.fetchone() is None:
                 sql = ("CREATE TABLE receipts ( " +
@@ -36,7 +36,7 @@ class sqlite(IStorage):
                        "comment text" +
                        " )")
                 c.execute(sql)
-                conn.commit()
+                self.conn.commit()
             else:
                 c.execute("PRAGMA table_info('categories')")
                 print c.fetchall()
@@ -49,7 +49,7 @@ class sqlite(IStorage):
                        "comment text" +
                        " )")
                 c.execute(sql)
-                conn.commit()
+                self.conn.commit()
             else:
                 c.execute("PRAGMA table_info('items')")
                 print c.fetchall()
@@ -66,7 +66,7 @@ class sqlite(IStorage):
                        "tags text" +
                        " )")
                 c.execute(sql)
-                conn.commit()
+                self.conn.commit()
             else:
                 c.execute("PRAGMA table_info('positions')")
                 print c.fetchall()
