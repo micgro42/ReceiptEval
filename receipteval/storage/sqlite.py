@@ -25,10 +25,7 @@ class sqlite(IStorage):
                        "fk_category_id text" +
                        " )")
                 c.execute(sql)
-                c.commit()
-            else:
-                c.execute("PRAGMA table_info('receipts')")
-                print c.fetchall()
+                self.conn.commit()
 
             c.execute("SELECT name FROM sqlite_master WHERE type='table' AND name = ?", ('categories',))
             if c.fetchone() is None:
@@ -38,9 +35,6 @@ class sqlite(IStorage):
                        " )")
                 c.execute(sql)
                 self.conn.commit()
-            else:
-                c.execute("PRAGMA table_info('categories')")
-                print c.fetchall()
 
             c.execute("SELECT name FROM sqlite_master WHERE type='table' AND name = ?", ('items',))
             if c.fetchone() is None:
@@ -52,9 +46,6 @@ class sqlite(IStorage):
                        " )")
                 c.execute(sql)
                 self.conn.commit()
-            else:
-                c.execute("PRAGMA table_info('items')")
-                print c.fetchall()
 
             c.execute("SELECT name FROM sqlite_master WHERE type='table' AND name = ?", ('positions',))
             if c.fetchone() is None:
@@ -68,12 +59,9 @@ class sqlite(IStorage):
                        " )")
                 c.execute(sql)
                 self.conn.commit()
-            else:
-                c.execute("PRAGMA table_info('positions')")
-                print c.fetchall()
 
-        except sqlite3.Error, e:
-            print "Error %s:" % e.args[0]
+        except sqlite3.Error as e:
+            print ("Error %s:" % e.args[0])
             sys.exit(1)
 
     def addPurchase(self, purchase):
