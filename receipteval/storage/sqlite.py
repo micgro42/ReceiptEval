@@ -137,7 +137,30 @@ class sqlite(IStorage):
                             % (self.__class__.__name__))
 
 
+    """
+    /**
+     * Saves the given key-value array to the given table
+     *
+     * @param string table
+     * @param dict entity associative array holding the key/value pairs
+     */
+     """
+    def saveEntity(self, table, entity):
+        c = self.conn.cursor()
 
+        keys = ', '.join(entity.keys());
+        vals = entity.values()
+        wlds = ', '.join('?'*len(vals));
+
+        sql = 'REPLACE INTO '+table+' ('+keys+') VALUES ('+wlds+')'
+        try:
+            c.execute(sql, vals)
+            self.conn.commit()
+        except Error(e):
+            print(e)
+            self.conn.rollback()
+            return false
+        return true
 
 
 
