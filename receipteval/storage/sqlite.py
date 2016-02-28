@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # encoding: utf-8
+
 from storage import IStorage
 import sqlite3
 import sys
@@ -17,7 +18,7 @@ class sqlite(IStorage):
             c.execute("SELECT name FROM sqlite_master WHERE type='table' AND name = ?", ('receipts',))
             if c.fetchone() is None:
                 sql = ("CREATE TABLE receipts ( " +
-                       "pk_receipt_id int PRIMARY KEY," +
+                       "pk_receipt_id INTEGER PRIMARY KEY," +
                        "date date," +
                        "shop text," +
                        "flags text," +  # comma separated, suboptimal
@@ -32,7 +33,7 @@ class sqlite(IStorage):
             c.execute("SELECT name FROM sqlite_master WHERE type='table' AND name = ?", ('categories',))
             if c.fetchone() is None:
                 sql = ("CREATE TABLE categories ( " +
-                       "name text PRIMARY KEY," +
+                       "name text PRIMARY KEY NOT NULL," +
                        "comment text" +
                        " )")
                 c.execute(sql)
@@ -44,7 +45,7 @@ class sqlite(IStorage):
             c.execute("SELECT name FROM sqlite_master WHERE type='table' AND name = ?", ('items',))
             if c.fetchone() is None:
                 sql = ("CREATE TABLE items ( " +
-                       "pk_item_id int PRIMARY KEY," +
+                       "pk_item_id INTEGER PRIMARY KEY," +
                        "name text," +
                        "EAN int," +
                        "comment text" +
@@ -58,8 +59,8 @@ class sqlite(IStorage):
             c.execute("SELECT name FROM sqlite_master WHERE type='table' AND name = ?", ('positions',))
             if c.fetchone() is None:
                 sql = ("CREATE TABLE positions ( " +
-                       "fk_receipt_id int," +
-                       "fk_item_id int," +
+                       "fk_receipt_id INTEGER," +
+                       "fk_item_id INTEGER," +
                        "fk_category_id text," +
                        "price money," +
                        "quantity int," +
