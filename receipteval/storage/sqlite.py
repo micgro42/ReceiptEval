@@ -77,22 +77,41 @@ class sqlite(IStorage):
         c = self.conn.cursor()
         t = (date, shop, flags, category)
         c.execute(sql, t)
+        purchaseID = c.lastrowid
         # If I replace an new purchase into the database - how do I get its ID?
         ok = True
         for position in positions:
-            ok = ok && self.addPosition(position)
+            ok = ok and self.addPosition(position)
 
     def getPurchases(self):
         NotImplementedError("Class %s doesn't implement getPurchases()"
                             % (self.__class__.__name__))
 
-    def addItem(self, item):
-        NotImplementedError("Class %s doesn't implement getPurchases()"
-                            % (self.__class__.__name__))
+    def addItem(self, entity):
+        sql = 'REPLACE INTO items (name, EAN, comment) VALUES (?, ?, ?)'
+        c = self.conn.cursor()
+        t = (entity['name'], entity['ean'], entity['comment'])
+        try:
+            c.execute(sql, t)
+            self.conn.commit()
+        except sqlite3.Error as e:
+            print(e)
+            self.conn.rollback()
+            return False
+        return True
 
-    def addCategory(self, category):
-        NotImplementedError("Class %s doesn't implement getPurchases()"
-                            % (self.__class__.__name__))
+    def addCategory(self, entity):
+        sql = 'REPLACE INTO categories (name, comment) VALUES (?, ?)'
+        c = self.conn.cursor()
+        t = (entity['name'], entity['comment'])
+        try:
+            c.execute(sql, t)
+            self.conn.commit()
+        except sqlite3.Error as e:
+            print(e)
+            self.conn.rollback()
+            return False
+        return True
 
     def getCategory(self, name):
         c = self.conn.cursor()
@@ -101,9 +120,17 @@ class sqlite(IStorage):
         return c.fetchone()
 
     def getAllCategories(self):
+        c = self.conn.cursor()
         sql = "SELECT * FROM categories"
-        NotImplementedError("Class %s doesn't implement getPurchases()"
-                            % (self.__class__.__name__))
+        c.execute(sql)
+        return c.fetchall()
+
+    def getAllItems(self):
+        c = self.conn.cursor()
+        sql = "SELECT * FROM items"
+        c.execute(sql)
+        return c.fetchall()
+
 
     def addPosition(self, position):
         NotImplementedError("Class %s doesn't implement getPurchases()"
