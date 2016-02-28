@@ -1,0 +1,30 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>
+  Receipt Collection and Evaluation
+</title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.4.2/chosen.min.css">
+<!-- Meta Tags -->
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<!-- JavaScript -->
+<script type="text/javascript" src="static/scripts/jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="static/scripts/jquery.form-3.09.js"></script>
+<script type="text/javascript" src="static/scripts/deform.js"></script>
+<script type="text/javascript" src="static/scripts/modernizr.custom.input-types-and-atts.js"></script>
+<script type="text/javascript" src="static/scripts/jquery-ui-1.8.11.custom.min.js"></script>
+<!-- CSS -->
+<link rel="stylesheet" href="static/css/form.css" type="text/css" />
+<link rel="stylesheet" href="static/css/ui-lightness/jquery-ui-1.8.11.custom.css" type="text/css" />
+</head>
+<body id="public">
+<div id="container">
+<h1>Receipt Collection and Evaluation</h1>
+<span tal:replace="structure form"/>
+</div>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.4.2/chosen.jquery.min.js"></script>
+<script type="text/javascript" src="js/script.js"></script>
+</body>
+</html>
