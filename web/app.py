@@ -12,9 +12,6 @@ from colander import String
 from colander import Date
 from colander import Decimal
 from colander import Integer
-from colander import Length
-from colander import OneOf
-from colander import null
 import colander
 
 from deform import ValidationFailure
@@ -26,7 +23,7 @@ import itertools
 
 from receipteval.storage.sqlite import sqlite
 
-
+import pprint
 
 here = os.path.dirname(os.path.abspath(__file__))
 
@@ -43,6 +40,9 @@ class ItemSchema(MappingSchema):
                         missing='',
                         description = 'EAN')
 
+    def update(self):
+        pass
+
 class CategorySchema(MappingSchema):
     name  = SchemaNode(String(),
                         description = 'Name der Kategorie')
@@ -50,6 +50,9 @@ class CategorySchema(MappingSchema):
                         widget = widget.TextInputWidget(size=40),
                         missing='',
                         description = 'Kommentar zur Kategorie')
+
+    def update(self):
+        pass
 
 class PositionSchema(MappingSchema):
     db = sqlite()
@@ -87,13 +90,11 @@ class PositionSchema(MappingSchema):
         categories = [(cat, cat) for (cat, comment) in categories]
         self['category'].widget = widget.SelectWidget(values=categories)
 
-class PositionsSchema(colander.SequenceSchema):
+class PositionsSchema(SequenceSchema):
     position = PositionSchema()
 
     def update(self):
-        print(self.__dict__)
-        print(dir(self['abc']))
-        self['abc'].update()
+        self['position'].update()
 
 
 class PurchaseSchema(MappingSchema):
@@ -121,8 +122,6 @@ class PurchaseSchema(MappingSchema):
         categories = self.db.getAllCategories()
         categories = [(cat, cat) for (cat, comment) in categories]
         self['payment_method'].widget = widget.SelectWidget(values=categories)
-        # print(self.__dict__)
-        # print(dir(self['positions']))
         self['positions'].update()
 
 def form_view(request):
@@ -130,9 +129,7 @@ def form_view(request):
     itemForm = Form(itemSchema, buttons=('submit',),  formid='itemForm', counter=counter)
     categorySchema = CategorySchema()
     categoryForm = Form(categorySchema, buttons=('submit',), formid='categoryForm', counter=counter)
-
     purchaseSchema = PurchaseSchema()
-    purchaseSchema.update()
     purchaseForm = Form(purchaseSchema, buttons=('submit',), formid='purchaseForm', counter=counter)
     db = sqlite()
     dbfunctions = {
@@ -145,17 +142,20 @@ def form_view(request):
         posted_formid = request.POST['__formid__']
         for (formid, form) in [('itemForm', itemForm), ('categoryForm', categoryForm), ('purchaseForm', purchaseForm)]:
             if formid == posted_formid:
-                controls = request.POST.items()
+                controls = list(request.POST.items())
                 pstruct = peppercorn.parse(controls)
-                print(pstruct)
                 try:
                     form.validate(controls)
+                    pprint.pprint(pstruct)
                     dbAdd = dbfunctions.get(formid).get('add')
                     dbAdd(pstruct)
-                    html.append(form.render(null))
+                    print('foo')
+                    html.append(form.render())
+                    print('bar')
                 except ValidationFailure as e:
                     return {'form':e.render()}
             else:
+                form.schema.update()
                 html.append(form.render())
     else:
         for form in itemForm, categoryForm, purchaseForm:
