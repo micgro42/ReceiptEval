@@ -89,7 +89,7 @@ setup(
     install_requires=[
         'pyramid',
         'pyramid_chameleon',
-        'deform'
+        'deform >= 2* '
     ],
 
     # List additional groups of dependencies here (e.g. development dependencies).
