@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
-from storage import IStorage
+from receipteval.storage.storage import IStorage
 import sqlite3
 import sys
 
@@ -18,7 +18,7 @@ class sqlite(IStorage):
             c.execute("SELECT name FROM sqlite_master WHERE type='table' AND name = ?", ('receipts',))
             if c.fetchone() is None:
                 sql = ("CREATE TABLE receipts ( " +
-                       "pk_receipt_id INTEGER PRIMARY KEY," +
+                       "pk_receipt_id INTEGER PRIMARY KEY AUTOINCREMENT," +
                        "date date," +
                        "shop text," +
                        "flags text," +  # comma separated, suboptimal
@@ -65,23 +65,29 @@ class sqlite(IStorage):
             sys.exit(1)
 
     def addPurchase(self, purchase):
-        if self.getCategory(purchase.payment_method) is None:
+        if self.getCategory((purchase['payment_method'],)) is None:
             return False
-        category = purchase.payment_method
-        flags = purchase.flags
-        date = purchase.date
-        shop = purchase.shop
-        positions = purchase._positions # todo: we need the positions even if this is a ledger transaction!
-        sql = ("REPLACE INTO receipts (" +
+        category = purchase['payment_method']
+        flags = purchase['flags']
+        date = purchase['date']
+        shop = purchase['shop']
+        positions = purchase['positions'] # todo: we need the positions even if this is a ledger transaction!
+        sql = ("INSERT INTO receipts (" +
                "date, shop, flags, fk_category_id ) VALUES (?, ?, ?, ?)")
         c = self.conn.cursor()
-        t = (date, shop, flags, category)
-        c.execute(sql, t)
-        purchaseID = c.lastrowid
-        # If I replace an new purchase into the database - how do I get its ID?
-        ok = True
-        for position in positions:
-            ok = ok and self.addPosition(position)
+        values = (date, shop, ','.join(flags), category)
+        try:
+            c.execute(sql, values)
+            purchaseID = c.lastrowid
+            for position in positions:
+                position['receipt_id'] = purchaseID
+                self.addPosition(position)
+            self.conn.commit()
+        except sqlite3.Error as e:
+            print(e)
+            self.conn.rollback()
+            return False
+        return True
 
     def getPurchases(self):
         NotImplementedError("Class %s doesn't implement getPurchases()"
@@ -133,9 +139,19 @@ class sqlite(IStorage):
 
 
     def addPosition(self, position):
-        NotImplementedError("Class %s doesn't implement getPurchases()"
-                            % (self.__class__.__name__))
-
+        c = self.conn.cursor()
+        sql = ("INSERT INTO positions " +
+        "(fk_receipt_id, fk_item_id, fk_category_id, price, quantity, tags) " +
+        "VALUES (?, ?, ?, ?, ?, ?)")
+        values = (
+                    position['receipt_id'],
+                    position['item_id'],
+                    position['category'],
+                    position['price'],
+                    position['quantity'],
+                    position['tags']
+                  )
+        c.execute(sql, values)
 
     """
     /**
@@ -156,11 +172,11 @@ class sqlite(IStorage):
         try:
             c.execute(sql, vals)
             self.conn.commit()
-        except Error(e):
+        except sqlite3.Error as e:
             print(e)
             self.conn.rollback()
-            return false
-        return true
+            return False
+        return True
 
 
 
