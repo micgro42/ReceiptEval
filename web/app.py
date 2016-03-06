@@ -4,6 +4,7 @@ import os
 
 from wsgiref.simple_server import make_server
 from pyramid.config import Configurator
+from pyramid.httpexceptions import HTTPFound
 
 from colander import MappingSchema
 from colander import SequenceSchema
@@ -149,9 +150,8 @@ def form_view(request):
                     pprint.pprint(pstruct)
                     dbAdd = dbfunctions.get(formid).get('add')
                     dbAdd(pstruct)
-                    print('foo')
-                    html.append(form.render())
-                    print('bar')
+                    url = request.application_url
+                    return HTTPFound(location=url)
                 except ValidationFailure as e:
                     return {'form':e.render()}
             else:
