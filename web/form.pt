@@ -9,8 +9,10 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <!-- JavaScript -->
 <script type="text/javascript" src="static/scripts/jquery-2.0.3.min.js"></script>
-<script type="text/javascript" src="static/scripts/jquery.form-3.09.js"></script>
+<script type="text/javascript" src="static/scripts/bootstrap.min.js"></script>
 <script type="text/javascript" src="static/scripts/modernizr.custom.input-types-and-atts.js"></script>
+<script type="text/javascript" src="static/scripts/jquery.maskMoney-1.4.1.js"></script>
+<script type="text/javascript" src="static/scripts/jquery.form-3.09.js"></script>
 
 <script type="text/javascript" src="static/pickadate/picker.js"></script>
 <script type="text/javascript" src="static/pickadate/picker.date.js"></script>
