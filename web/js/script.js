@@ -2,5 +2,11 @@
 
 jQuery(function(){
 deform.load();
-jQuery('select').chosen();
+
+var chosen_config = {
+    'search_contains': true
+};
+
+jQuery('.deformSeqAdd').click(function(event){jQuery('select').chosen(chosen_config);});
+jQuery('select').chosen(chosen_config);
 })
