@@ -163,6 +163,7 @@ def form_view(request):
                 html.append(form.render())
     else:
         for form in itemForm, categoryForm, purchaseForm:
+            form.schema.update()
             html.append(form.render())
     html = ''.join(html)
     return {'form':html}
