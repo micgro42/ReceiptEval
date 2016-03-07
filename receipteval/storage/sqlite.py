@@ -128,13 +128,13 @@ class sqlite(IStorage):
 
     def getAllCategories(self):
         c = self.conn.cursor()
-        sql = "SELECT * FROM categories"
+        sql = "SELECT * FROM categories ORDER BY name ASC"
         c.execute(sql)
         return c.fetchall()
 
     def getAllItems(self):
         c = self.conn.cursor()
-        sql = "SELECT * FROM items"
+        sql = "SELECT * FROM items ORDER BY name ASC"
         c.execute(sql)
         return c.fetchall()
 
