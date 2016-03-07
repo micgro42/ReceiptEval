@@ -174,6 +174,7 @@ if __name__ == '__main__':
     config.add_view(form_view, renderer=os.path.join(here, 'form.pt'))
     config.add_static_view('static', 'deform:static')
     config.add_static_view('js', path='js')
+    config.add_static_view('css', path='css')
     app = config.make_wsgi_app()
     server = make_server('0.0.0.0', 8080, app)
     server.serve_forever()
