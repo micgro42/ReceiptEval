@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import os
+from collections import defaultdict
 
 from wsgiref.simple_server import make_server
 from pyramid.config import Configurator
@@ -69,8 +70,11 @@ class PositionSchema(MappingSchema):
     db = sqlite()
     categories = db.getAllCategories()
     categories = [(cat, cat) for (cat, comment) in categories]
-    items = db.getAllItems()
-    items = [(itemid, name) for (itemid, name, category, comment) in items]
+    allItems = db.getAllItems()
+    optgroups = defaultdict(lambda: [],{})
+    for (itemid, name, category, comment) in allItems:
+        optgroups[category].append((itemid, name))
+    items = [widget.OptGroup(category, *values) for category, values in sorted(optgroups.items())]
     quantity = SchemaNode(
                 Integer()
     )
@@ -98,8 +102,11 @@ class PositionSchema(MappingSchema):
     name = 'position'
 
     def update(self):
-        items = self.db.getAllItems()
-        items = [(itemid, name) for (itemid, name, category, comment) in items]
+        allItems = self.db.getAllItems()
+        optgroups = defaultdict(lambda: [],{})
+        for (itemid, name, category, comment) in allItems:
+            optgroups[category].append((itemid, name))
+        items = [widget.OptGroup(category, *values) for category, values in sorted(optgroups.items())]
         self['item_id'].widget = widget.SelectWidget(values=items)
         categories = self.db.getAllCategories()
         categories = [(cat, cat) for (cat, comment) in categories]
