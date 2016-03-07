@@ -32,11 +32,13 @@ counter = itertools.count()
 
 class ItemSchema(MappingSchema):
     name  = SchemaNode(String(),
-                        description = 'Name des Items')
+                        description = 'Bezeichnung des Items',
+                        title='Name')
     comment = SchemaNode(String(),
                         widget = widget.TextInputWidget(size=40),
                         missing='',
                         description = 'Kommentar zum Item')
+    title='Neues Item'
 
     def update(self):
         pass
@@ -48,6 +50,7 @@ class CategorySchema(MappingSchema):
                         widget = widget.TextInputWidget(size=40),
                         missing='',
                         description = 'Kommentar zur Kategorie')
+    title='Neue Kategorie'
 
     def update(self):
         pass
@@ -118,6 +121,7 @@ class PurchaseSchema(MappingSchema):
                        widget=widget.CheckboxChoiceWidget(values=availableFlags),
                        )
     positions = PositionsSchema()
+    title='Neue Transaktion'
 
     def update(self):
         categories = self.db.getAllCategories()
