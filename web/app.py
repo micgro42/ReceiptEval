@@ -95,6 +95,7 @@ class PositionSchema(MappingSchema):
                 missing='',
                 description = 'tags'
                 )
+    name = 'position'
 
     def update(self):
         items = self.db.getAllItems()
