@@ -41,6 +41,7 @@ class sqlite(IStorage):
                 sql = ("CREATE TABLE items ( " +
                        "pk_item_id INTEGER PRIMARY KEY," +
                        "name text," +
+                       "fk_category_id text," +
                        "comment text" +
                        " )")
                 c.execute(sql)
@@ -94,9 +95,9 @@ class sqlite(IStorage):
                             % (self.__class__.__name__))
 
     def addItem(self, entity):
-        sql = 'REPLACE INTO items (name, comment) VALUES (?, ?)'
+        sql = 'REPLACE INTO items (name, fk_category_id, comment) VALUES (?, ?, ?)'
         c = self.conn.cursor()
-        t = (entity['name'], entity['comment'])
+        t = (entity['name'], entity['category'], entity['comment'])
         try:
             c.execute(sql, t)
             self.conn.commit()

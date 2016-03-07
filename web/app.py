@@ -31,9 +31,17 @@ here = os.path.dirname(os.path.abspath(__file__))
 counter = itertools.count()
 
 class ItemSchema(MappingSchema):
+    db = sqlite()
     name  = SchemaNode(String(),
                         description = 'Bezeichnung des Items',
                         title='Name')
+    categories = db.getAllCategories()
+    categories = [(cat, cat) for (cat, comment) in categories]
+    category = SchemaNode(
+                String(),
+                widget=widget.SelectWidget(values=categories),
+                        description = 'Standardkategorie des Items'
+                )
     comment = SchemaNode(String(),
                         widget = widget.TextInputWidget(size=40),
                         missing='',
@@ -41,7 +49,9 @@ class ItemSchema(MappingSchema):
     title='Neues Item'
 
     def update(self):
-        pass
+        categories = self.db.getAllCategories()
+        categories = [(cat, cat) for (cat, comment) in categories]
+        self['category'].widget = widget.SelectWidget(values=categories)
 
 class CategorySchema(MappingSchema):
     name  = SchemaNode(String(),
@@ -60,7 +70,7 @@ class PositionSchema(MappingSchema):
     categories = db.getAllCategories()
     categories = [(cat, cat) for (cat, comment) in categories]
     items = db.getAllItems()
-    items = [(itemid, name) for (itemid, name, comment) in items]
+    items = [(itemid, name) for (itemid, name, category, comment) in items]
     quantity = SchemaNode(
                 Integer()
     )
@@ -88,7 +98,7 @@ class PositionSchema(MappingSchema):
 
     def update(self):
         items = self.db.getAllItems()
-        items = [(itemid, name) for (itemid, name, comment) in items]
+        items = [(itemid, name) for (itemid, name, category, comment) in items]
         self['item_id'].widget = widget.SelectWidget(values=items)
         categories = self.db.getAllCategories()
         categories = [(cat, cat) for (cat, comment) in categories]
