@@ -41,7 +41,6 @@ class sqlite(IStorage):
                 sql = ("CREATE TABLE items ( " +
                        "pk_item_id INTEGER PRIMARY KEY," +
                        "name text," +
-                       "EAN int," +
                        "comment text" +
                        " )")
                 c.execute(sql)
@@ -55,6 +54,7 @@ class sqlite(IStorage):
                        "fk_category_id text," +
                        "price money," +
                        "quantity int," +
+                       "EAN int," +
                        "tags text" +
                        " )")
                 c.execute(sql)
@@ -94,9 +94,9 @@ class sqlite(IStorage):
                             % (self.__class__.__name__))
 
     def addItem(self, entity):
-        sql = 'REPLACE INTO items (name, EAN, comment) VALUES (?, ?, ?)'
+        sql = 'REPLACE INTO items (name, comment) VALUES (?, ?)'
         c = self.conn.cursor()
-        t = (entity['name'], entity['ean'], entity['comment'])
+        t = (entity['name'], entity['comment'])
         try:
             c.execute(sql, t)
             self.conn.commit()
@@ -141,14 +141,15 @@ class sqlite(IStorage):
     def addPosition(self, position):
         c = self.conn.cursor()
         sql = ("INSERT INTO positions " +
-        "(fk_receipt_id, fk_item_id, fk_category_id, price, quantity, tags) " +
-        "VALUES (?, ?, ?, ?, ?, ?)")
+        "(fk_receipt_id, fk_item_id, fk_category_id, price, quantity, ean, tags) " +
+        "VALUES (?, ?, ?, ?, ?, ?, ?)")
         values = (
                     position['receipt_id'],
                     position['item_id'],
                     position['category'],
                     position['price'],
                     position['quantity'],
+                    position['ean'],
                     position['tags']
                   )
         c.execute(sql, values)

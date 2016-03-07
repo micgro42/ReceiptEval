@@ -37,9 +37,6 @@ class ItemSchema(MappingSchema):
                         widget = widget.TextInputWidget(size=40),
                         missing='',
                         description = 'Kommentar zum Item')
-    ean   = SchemaNode(String(),
-                        missing='',
-                        description = 'EAN')
 
     def update(self):
         pass
@@ -60,7 +57,7 @@ class PositionSchema(MappingSchema):
     categories = db.getAllCategories()
     categories = [(cat, cat) for (cat, comment) in categories]
     items = db.getAllItems()
-    items = [(itemid, name) for (itemid, name, ean, comment) in items]
+    items = [(itemid, name) for (itemid, name, comment) in items]
     quantity = SchemaNode(
                 Integer()
     )
@@ -78,6 +75,9 @@ class PositionSchema(MappingSchema):
                 Decimal(),
                 widget=widget.MoneyInputWidget()
                 )
+    ean   = SchemaNode(String(),
+                        missing='',
+                        description = 'EAN')
     tags     = SchemaNode(String(),
                 missing='',
                 description = 'tags'
@@ -85,7 +85,7 @@ class PositionSchema(MappingSchema):
 
     def update(self):
         items = self.db.getAllItems()
-        items = [(itemid, name) for (itemid, name, ean, comment) in items]
+        items = [(itemid, name) for (itemid, name, comment) in items]
         self['item_id'].widget = widget.SelectWidget(values=items)
         categories = self.db.getAllCategories()
         categories = [(cat, cat) for (cat, comment) in categories]
