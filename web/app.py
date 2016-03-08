@@ -76,7 +76,8 @@ class PositionSchema(MappingSchema):
         optgroups[category].append((itemid, name))
     items = [widget.OptGroup(category, *values) for category, values in sorted(optgroups.items())]
     quantity = SchemaNode(
-                Integer()
+                Integer(),
+                default=1
     )
     item_id  = SchemaNode(
                 String(),
