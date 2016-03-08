@@ -8,8 +8,19 @@ var chosen_config = {
     'width': '100%'
 };
 
-jQuery('.deformSeqAdd').click(function(event){jQuery('#purchaseForm select').chosen(chosen_config);});
-jQuery('#purchaseForm select').chosen(chosen_config);
+var updatePurchaseForm = function() {
+    jQuery('#purchaseForm select').chosen(chosen_config);
+    jQuery('#purchaseForm select[name=item_id]').change(function(event){
+        var value = jQuery(this).val();
+        var defaultCategory = jQuery(this).children().find('option[value='+value+']').parent('optgroup').attr('label');
+        var $catSelect = jQuery(this).parents('.panel-body').first().find('select[name=category]')
+        $catSelect.val(defaultCategory).trigger("chosen:updated");
+    });
+}
+updatePurchaseForm();
+
+jQuery('.deformSeqAdd').click(updatePurchaseForm);
+
 jQuery('#itemForm select').chosen({
     'search_contains': true,
     'width': 'auto'
