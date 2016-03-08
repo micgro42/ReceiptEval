@@ -19,7 +19,7 @@
 <script type="text/javascript" src="static/pickadate/picker.time.js"></script>
 <script type="text/javascript" src="static/pickadate/legacy.js"></script>
 
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.4.2/chosen.jquery.min.js"></script>
+<script type="text/javascript" src="js/chosen.jquery.min.js"></script>
 
 <script type="text/javascript" src="static/scripts/deform.js"></script>
 
@@ -30,8 +30,8 @@
 <link rel="stylesheet" href="static/pickadate/themes/default.time.css" type="text/css" />
 
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.4.2/chosen.min.css">
 
+<link rel="stylesheet" href="css/chosen.min.css" type="text/css" />
 <link rel="stylesheet" href="css/style.css" type="text/css" />
 </head>
 <body id="public">
