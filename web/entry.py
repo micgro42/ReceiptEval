@@ -18,6 +18,7 @@ import peppercorn
 import itertools
 
 from pyramid.httpexceptions import HTTPFound
+from pyramid.view import view_config
 from receipteval.storage.sqlite import sqlite
 
 import pprint
@@ -142,6 +143,7 @@ class PurchaseSchema(MappingSchema):
         self['payment_method'].widget = widget.SelectWidget(values=categories)
         self['positions'].update()
 
+@view_config(route_name='entry_route')
 def form_view(request):
     itemSchema = ItemSchema()
     itemForm = Form(itemSchema, buttons=('submit',),  formid='itemForm', counter=counter)
