@@ -16,6 +16,7 @@ var updatePurchaseForm = function() {
         var $catSelect = jQuery(this).parents('.panel-body').first().find('select[name=category]')
         $catSelect.val(defaultCategory).trigger("chosen:updated");
     });
+    jQuery('#purchaseForm select[name=item_id]').change();
 }
 updatePurchaseForm();
 
