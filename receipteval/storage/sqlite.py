@@ -2,8 +2,10 @@
 # encoding: utf-8
 
 from receipteval.storage.storage import IStorage
+from receipteval.purchase import Purchase
 import sqlite3
 import sys
+from pprint import pprint
 
 
 class sqlite(IStorage):
@@ -89,6 +91,40 @@ class sqlite(IStorage):
             self.conn.rollback()
             return False
         return True
+
+    def getPurchasesByTimespan(self, start, end):
+        sql = ("SELECT * "
+               "FROM receipts "
+               "WHERE date >= ? AND date <= ? ")
+        c = self.conn.cursor()
+        parameters = (start, end)
+        c.execute(sql, parameters)
+        return self.createPurchaseObjects(c.fetchall())
+
+    def createPurchaseObjects(self, metapurchases):
+        purchases = []
+        for meta in metapurchases:
+            purchase = Purchase(meta[1],
+                                meta[2],
+                                payment_method=meta[4],
+                                flags=meta[3])
+            positions = self.getPositions(meta[0])
+            for position in positions:
+                purchase.add_item(name=position[1],
+                                  count=position[0],
+                                  category=position[2],
+                                  price=position[3])
+            purchases.append(purchase)
+        return purchases
+
+    def getPositions(self, receipt_id):
+        sql = ("SELECT quantity, name, p.fk_category_id, price, EAN, tags "
+               "FROM positions as p, items as i "
+               "WHERE fk_receipt_id = ? AND p.fk_item_id = i.pk_item_id")
+        c = self.conn.cursor()
+        t = (receipt_id,)
+        c.execute(sql, t)
+        return c.fetchall()
 
     def getPurchases(self):
         NotImplementedError("Class %s doesn't implement getPurchases()"
