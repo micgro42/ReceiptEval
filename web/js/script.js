@@ -27,7 +27,7 @@ var updatePurchaseForm = function() {
 }
 updatePurchaseForm();
 
-jQuery('.deformSeqAdd').click(updatePurchaseForm);
+jQuery('.deform-seq-add').click(updatePurchaseForm);
 
 jQuery('#itemForm select').chosen(chosen_config);
 // jQuery('#itemForm').addClass('form-inline');
