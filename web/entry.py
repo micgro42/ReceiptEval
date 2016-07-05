@@ -143,8 +143,36 @@ class PurchaseSchema(MappingSchema):
         self['payment_method'].widget = widget.SelectWidget(values=categories)
         self['positions'].update()
 
+
+
+
+def getFormHTML():
+    itemSchema = ItemSchema()
+    itemForm = Form(itemSchema, buttons=('submit',),  formid='itemForm', counter=counter)
+    categorySchema = CategorySchema()
+    categoryForm = Form(categorySchema, buttons=('submit',), formid='categoryForm', counter=counter)
+    purchaseSchema = PurchaseSchema()
+    purchaseForm = Form(purchaseSchema, buttons=('submit',), formid='purchaseForm', counter=counter)
+    html = []
+    for form in itemForm, categoryForm, purchaseForm:
+        form.schema.update()
+        html.append(form.render())
+    html = ''.join(html)
+    return {'form':html}
+
+
+def handleItemCatForms(request):
+    db = sqlite()
+    pprint.pprint(request.params)
+    return {'form': ''}
+
+
 @view_config(route_name='entry_route')
 def form_view(request):
+    if request.method == 'GET':
+        return getFormHTML()
+    if request.method == 'PUT':
+        return handleItemCatForms(request)
     itemSchema = ItemSchema()
     itemForm = Form(itemSchema, buttons=('submit',),  formid='itemForm', counter=counter)
     categorySchema = CategorySchema()

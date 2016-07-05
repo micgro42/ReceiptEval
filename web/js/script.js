@@ -40,4 +40,24 @@ jQuery('legend').replaceWith(function(){
     return jQuery("<div />").append($(this).contents()).addClass('panel-heading');
 });
 jQuery('#purchaseForm').append(jQuery('<div id="total" class="bg-info">0</div>'));
+
+jQuery('#itemForm').submit(function(evt){
+    evt.preventDefault();
+    evt.stopPropagation();
+    var $this = jQuery(this);
+    jQuery.ajax({
+        type: 'PUT',
+        data: {
+            name: $this.find('input[name=name]').val(),
+            category: $this.find('select[name=category]').val(),
+            comment: $this.find('input[name=comment]').val(),
+        }
+    }).done(function(){
+        $this.css('background-color','green');
+    }).fail(function(){
+        $this.css('background-color','red');
+    });
+});
+
+
 })
