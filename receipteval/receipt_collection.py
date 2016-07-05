@@ -14,7 +14,7 @@ class ReceiptCollection(object):
     '''
 
     def __init__(self, purchases=[]):
-        self.categories = defaultdict(lambda: [0.0, set()])
+        self.categories = defaultdict(lambda: [0.0, set(), 0.0])
         self.purchases = purchases
         self.unsane_items = []
         self.unsane_categories = []
@@ -34,6 +34,29 @@ class ReceiptCollection(object):
 
         self.check_sanity()
         self.calculate_total()
+
+    def totalize_categories(self):
+        self.initialize_super_categories()
+        for category in self.categories.keys():
+            catsum = 0
+            length = len(category)
+            for cat in self.categories.keys():
+                if (cat[0:length] == category):
+                    catsum += self.categories[cat][0]
+            self.categories[category][2] = catsum
+
+    def initialize_super_categories(self):
+        missing_super_categories = []
+        for category in self.categories.keys():
+            if (category[:category.rfind(':')] not in self.categories.keys()):
+                missing_super_categories.append(category[:category.rfind(':')])
+        for missing in missing_super_categories:
+            while True:
+                if missing not in self.categories:
+                    self.categories[missing][0] = 0
+                if missing.rfind(':') == -1:
+                    break
+                missing = missing[:missing.rfind(':')]
 
     def check_category(self, category, item):
         '''
