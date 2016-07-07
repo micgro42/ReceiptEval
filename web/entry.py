@@ -164,6 +164,9 @@ def getFormHTML():
 def handleItemCatForms(request):
     db = sqlite()
     pprint.pprint(request.params)
+    if request.params['form'] == 'itemForm':
+        # FIXME: Validation!
+        db.addItem(request.params)
     return {'form': ''}
 
 

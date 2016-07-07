@@ -48,6 +48,7 @@ jQuery('#itemForm').submit(function(evt){
     jQuery.ajax({
         type: 'PUT',
         data: {
+            form: "itemForm",
             name: $this.find('input[name=name]').val(),
             category: $this.find('select[name=category]').val(),
             comment: $this.find('input[name=comment]').val(),
