@@ -167,6 +167,9 @@ def handleItemCatForms(request):
     if request.params['form'] == 'itemForm':
         # FIXME: Validation!
         db.addItem(request.params)
+    if request.params['form'] == 'categoryForm':
+        # FIXME: Validation!
+        db.addCategory(request.params)
     return {'form': ''}
 
 

@@ -60,5 +60,22 @@ jQuery('#itemForm').submit(function(evt){
     });
 });
 
+jQuery('#categoryForm').submit(function(evt){
+    evt.preventDefault();
+    evt.stopPropagation();
+    var $this = jQuery(this);
+    jQuery.ajax({
+        type: 'PUT',
+        data: {
+            form: "categoryForm",
+            name: $this.find('input[name=name]').val(),
+            comment: $this.find('input[name=comment]').val(),
+        }
+    }).done(function(){
+        $this.css('background-color','green');
+    }).fail(function(){
+        $this.css('background-color','red');
+    });
+});
 
 })
