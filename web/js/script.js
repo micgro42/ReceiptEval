@@ -82,12 +82,20 @@ $categoryForm.submit(function(evt){
     var $this = jQuery(this);
     jQuery.ajax({
         type: 'PUT',
+        url: window.location.pathname + 'category/',
         data: {
             form: "categoryForm",
             name: $this.find('input[name=name]').val(),
             comment: $this.find('input[name=comment]').val(),
         }
-    }).done(function(){
+    }).done(function(data, textStatus, jqXHR){
+        window.catData = data;
+        var $catsel = jQuery('select[name=category]');
+        $catsel.empty();
+        jQuery.each(jQuery.parseJSON(data), function (key, value) {
+            $catsel.append(jQuery('<option><option>').val(value[0]).text(value[1]));
+        });
+        $catsel.trigger('chosen:updated');
         $this.slideUp();
     }).fail(function(){
         $this.css('background-color','red');

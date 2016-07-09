@@ -17,10 +17,12 @@ from deform import widget
 import peppercorn
 import itertools
 
+from pyramid.response import Response
 from pyramid.httpexceptions import HTTPFound
 from pyramid.view import view_config
 from receipteval.storage.sqlite import sqlite
 
+import json
 import pprint
 from collections import defaultdict
 
@@ -161,16 +163,22 @@ def getFormHTML():
     return {'form':html}
 
 
-def handleItemCatForms(request):
+@view_config(route_name='item')
+def handleItemForms(request):
     db = sqlite()
     pprint.pprint(request.params)
-    if request.params['form'] == 'itemForm':
-        # FIXME: Validation!
-        db.addItem(request.params)
-    if request.params['form'] == 'categoryForm':
-        # FIXME: Validation!
-        db.addCategory(request.params)
+    db.addItem(request.params)
     return {'form': ''}
+
+
+@view_config(route_name='category')
+def handleCategoryForms(request):
+    db = sqlite()
+    pprint.pprint(request.params)
+    db.addCategory(request.params)
+    categories = db.getAllCategories()
+    categories = [(cat, cat) for (cat, comment) in categories]
+    return Response(json.dumps(categories))
 
 
 @view_config(route_name='entry_route')
@@ -178,7 +186,12 @@ def form_view(request):
     if request.method == 'GET':
         return getFormHTML()
     if request.method == 'PUT':
-        return handleItemCatForms(request)
+        if request.params['form'] == 'itemForm':
+            # FIXME: Validation!
+            return handleItemForms(request)
+        if request.params['form'] == 'categoryForm':
+            # FIXME: Validation!
+            return handleCategoryForms(request)
     itemSchema = ItemSchema()
     itemForm = Form(itemSchema, buttons=('submit',),  formid='itemForm', counter=counter)
     categorySchema = CategorySchema()
