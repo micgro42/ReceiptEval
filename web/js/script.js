@@ -1,6 +1,6 @@
-'use strict';
 
 jQuery(function(){
+'use strict';
 deform.load();
 
 var chosen_config = {
@@ -41,7 +41,15 @@ jQuery('legend').replaceWith(function(){
 });
 jQuery('#purchaseForm').append(jQuery('<div id="total" class="bg-info">0</div>'));
 
-jQuery('#itemForm').submit(function(evt){
+var $itemForm = jQuery('#itemForm');
+$itemForm.css('position', 'fixed');
+$itemForm.hide();
+var $itemFormButton = jQuery('<button id="showItemForm" class="showForm">New Item</button>');
+$itemFormButton.click(function(evt){
+    $itemForm.slideDown();
+});
+jQuery('body').append($itemFormButton);
+$itemForm.submit(function(evt){
     evt.preventDefault();
     evt.stopPropagation();
     var $this = jQuery(this);
@@ -54,13 +62,21 @@ jQuery('#itemForm').submit(function(evt){
             comment: $this.find('input[name=comment]').val(),
         }
     }).done(function(){
-        $this.css('background-color','green');
+        $this.slideUp();
     }).fail(function(){
         $this.css('background-color','red');
     });
 });
 
-jQuery('#categoryForm').submit(function(evt){
+var $categoryForm = jQuery('#categoryForm');
+$categoryForm.css('position', 'fixed');
+$categoryForm.hide();
+var $categoryFormButton = jQuery('<button id="showCategoryForm" class="showForm">New Category</button>');
+$categoryFormButton.click(function(evt){
+    $categoryForm.slideDown();
+});
+jQuery('body').append($categoryFormButton);
+$categoryForm.submit(function(evt){
     evt.preventDefault();
     evt.stopPropagation();
     var $this = jQuery(this);
@@ -72,7 +88,7 @@ jQuery('#categoryForm').submit(function(evt){
             comment: $this.find('input[name=comment]').val(),
         }
     }).done(function(){
-        $this.css('background-color','green');
+        $this.slideUp();
     }).fail(function(){
         $this.css('background-color','red');
     });

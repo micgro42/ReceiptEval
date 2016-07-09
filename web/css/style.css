@@ -6,6 +6,38 @@ p.help-block {
     display: none;
 }
 
+button.showForm {
+    position: fixed;
+    right: 0;
+    background-color: #DDF;
+    border-color: blue;
+    border-radius: 6px;
+    transform-origin: right bottom;
+    transform: rotate(-90deg)
+}
+
+#showItemForm {
+    top: 15%;
+}
+
+#showCategoryForm {
+    top: 55%;
+}
+
+#itemForm, #categoryForm {
+    width: 75%;
+    left: 12.5%;
+}
+
+#itemForm {
+    z-index: 50;
+}
+
+#categoryForm {
+    z-index: 100;
+}
+
+
 #total {
         position: fixed;
         right:0;
