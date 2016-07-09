@@ -93,7 +93,7 @@ $categoryForm.submit(function(evt){
         var $catsel = jQuery('select[name=category]');
         $catsel.empty();
         jQuery.each(jQuery.parseJSON(data), function (key, value) {
-            $catsel.append(jQuery('<option><option>').val(value[0]).text(value[1]));
+            $catsel.append(jQuery('<option></option>').val(value[0]).text(value[1]));
         });
         $catsel.trigger('chosen:updated');
         $this.slideUp();
