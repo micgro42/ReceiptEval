@@ -97,7 +97,7 @@ setup(
     # $ pip install -e .[dev,test]
     extras_require = {
         'dev': ['pypandoc'],
-        'testing': ['coverage','pytest'],
+        'testing': ['coverage','pytest','tox'],
     },
     tests_require=['pytest'],
     cmdclass={'test': PyTest},
