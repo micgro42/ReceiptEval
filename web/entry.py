@@ -168,13 +168,16 @@ def handleItemForms(request):
     db = sqlite()
     pprint.pprint(request.params)
     db.addItem(request.params)
-    return {'form': ''}
+    allItems = db.getAllItems()
+    optgroups = defaultdict(lambda: [], {})
+    for (itemid, name, category, comment) in allItems:
+        optgroups[category].append((itemid, name))
+    return Response(json.dumps(optgroups))
 
 
 @view_config(route_name='category')
 def handleCategoryForms(request):
     db = sqlite()
-    pprint.pprint(request.params)
     db.addCategory(request.params)
     categories = db.getAllCategories()
     categories = [(cat, cat) for (cat, comment) in categories]
