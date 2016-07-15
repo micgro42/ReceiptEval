@@ -61,7 +61,18 @@ $itemForm.submit(function(evt){
             category: $this.find('select[name=category]').val(),
             comment: $this.find('input[name=comment]').val(),
         }
-    }).done(function(){
+    }).done(function(data, textStatus, jqXHR){
+        var options = '';
+        jQuery.each(jQuery.parseJSON(data), function (key, optgroup) {
+            options += '<optgroup label="' + key + '">';
+            jQuery.each(optgroup, function (key, option) {
+                options += '<option value="' + option[0] + '">';
+                options += option[1];
+                options += '</option>';
+            });
+            options += '</optgroup>';
+        });
+        jQuery('select[name=item_id]').empty().append(options).trigger('chosen:updated');
         $this.slideUp();
     }).fail(function(){
         $this.css('background-color','red');
