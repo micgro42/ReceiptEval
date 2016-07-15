@@ -42,9 +42,10 @@ class sqlite(IStorage):
             if c.fetchone() is None:
                 sql = ("CREATE TABLE items ( " +
                        "pk_item_id INTEGER PRIMARY KEY," +
-                       "name text," +
-                       "fk_category_id text," +
-                       "comment text" +
+                       "name text NOT NULL UNIQUE," +
+                       "fk_category_id text NOT NULL," +
+                       "comment text," +
+                       "FOREIGN KEY (fk_category_id) REFERENCES categories(name)" +
                        " )")
                 c.execute(sql)
                 self.conn.commit()
